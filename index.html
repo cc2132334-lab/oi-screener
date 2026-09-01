@@ -49,7 +49,7 @@
             </div>
         </header>
 
-        <!-- 1. Segment Selector -->
+        <!-- Segment Selector -->
         <div class="flex p-1 bg-slate-200 dark:bg-slate-900 rounded-xl mb-3 border border-slate-300 dark:border-slate-800">
             <button onclick="switchSegment('fno')" id="seg-fno" class="flex-1 py-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all bg-white dark:bg-slate-800 text-emerald-700 dark:text-emerald-400 shadow-sm">
                 <i class="fa-solid fa-layer-group"></i> F&O Segment
@@ -59,132 +59,141 @@
             </button>
         </div>
 
-        <!-- 2. ALGO BOT CONTROLLER & CONFIGURATION (Runs in Background) -->
-        <div class="bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-3 sm:p-4 mb-4 shadow-md transition-all">
+        <!-- 4 Primary Navigation Tabs (Bot Tab First) -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 p-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl mb-4 shadow-sm">
             
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
-                <div class="flex items-center gap-3">
-                    <div id="botIconContainer" class="h-10 w-10 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-lg shadow-sm">
-                        <i id="botIcon" class="fa-solid fa-robot"></i>
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <span class="font-extrabold text-sm sm:text-base text-slate-800 dark:text-slate-100">Algo Execution Engine</span>
-                            <span id="botStatusBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full border bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800 flex items-center gap-1">
-                                <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span> RUNNING
-                            </span>
-                        </div>
-                        <p id="botStatusText" class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Running in background: Checking C1/C2 rules & Max % Move cap</p>
-                    </div>
-                </div>
+            <!-- Tab 1: Bot (Default Active) -->
+            <button onclick="switchStrategy('strategy-bot', this)" id="strat-bot-btn" class="strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 shadow-sm transition-all">
+                <i class="fa-solid fa-robot"></i>
+                <span>Algo Engine</span>
+            </button>
 
-                <div class="flex items-center gap-2 self-stretch sm:self-auto">
-                    <button onclick="startBot()" id="btnStartBot" class="flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md transition-all flex items-center justify-center gap-1.5 active:scale-95">
-                        <i class="fa-solid fa-play text-xs"></i> <span>Start Bot</span>
-                    </button>
-                    <button onclick="stopBot()" id="btnStopBot" class="flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-rose-600 hover:text-white shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-95">
-                        <i class="fa-solid fa-stop text-xs"></i> <span>Stop Bot</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Background Parameters Selection (4 Dropdowns) -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 mt-3">
-                
-                <!-- 1. Strategy Mode -->
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-1">
-                        <i class="fa-solid fa-layer-group text-emerald-600 mr-1"></i> Strategy Mode:
-                    </label>
-                    <select id="algoStrategySelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-2.5 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm">
-                        <option value="combined">🚀 Combine Mode (Strat 1 + 2)</option>
-                        <option value="strat1">⚡ Strat 1 (5M 5x Vol)</option>
-                        <option value="strat2">⏰ Strat 2 (9:25 Top 5)</option>
-                    </select>
-                </div>
-
-                <!-- 2. Max % Move Filter (1% to 10%) -->
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-1">
-                        <i class="fa-solid fa-filter text-rose-500 mr-1"></i> Max C1 Move Cap:
-                    </label>
-                    <select id="algoMaxMoveSelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-2.5 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-rose-500 shadow-sm">
-                        <option value="1.0">Max 1.0% Move</option>
-                        <option value="1.5">Max 1.5% Move</option>
-                        <option value="2.0" selected>Max 2.0% Move</option>
-                        <option value="2.5">Max 2.5% Move</option>
-                        <option value="3.0">Max 3.0% Move</option>
-                        <option value="4.0">Max 4.0% Move</option>
-                        <option value="5.0">Max 5.0% Move</option>
-                        <option value="6.0">Max 6.0% Move</option>
-                        <option value="7.0">Max 7.0% Move</option>
-                        <option value="8.0">Max 8.0% Move</option>
-                        <option value="9.0">Max 9.0% Move</option>
-                        <option value="10.0">Max 10.0% Move</option>
-                    </select>
-                </div>
-
-                <!-- 3. Target Level (1:1 to 1:10) -->
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-1">
-                        <i class="fa-solid fa-bullseye text-indigo-600 mr-1"></i> Target Level:
-                    </label>
-                    <select id="algoTargetSelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-2.5 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm">
-                        <option value="1">Target 1:1</option>
-                        <option value="2">Target 1:2</option>
-                        <option value="3" selected>Target 1:3</option>
-                        <option value="4">Target 1:4</option>
-                        <option value="5">Target 1:5</option>
-                        <option value="6">Target 1:6</option>
-                        <option value="7">Target 1:7</option>
-                        <option value="8">Target 1:8</option>
-                        <option value="9">Target 1:9</option>
-                        <option value="10">Target 1:10</option>
-                    </select>
-                </div>
-
-                <!-- 4. Exit Mode -->
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-1">
-                        <i class="fa-solid fa-scale-balanced text-amber-600 mr-1"></i> Exit Mode:
-                    </label>
-                    <select id="algoExitModeSelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-2.5 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-sm">
-                        <option value="half" selected>⚖️ Half Book & Trail</option>
-                        <option value="full">🎯 100% Full Exit</option>
-                    </select>
-                </div>
-
-            </div>
-
-            <!-- Background Live Monitoring Status Strip -->
-            <div id="trailingRuleBanner" class="mt-3 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-[11px] text-slate-600 dark:text-slate-300 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
-                <div class="flex items-center gap-2">
-                    <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span id="trailingRuleText"><b>Background Engine Active:</b> C1 Move &le; 2.0% &bull; Entry on C1/C2 Breakout &bull; Target 1:3 (Half Book & Trail SL).</span>
-                </div>
-                <span class="self-start sm:self-auto font-mono text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded border border-emerald-300 font-bold">Auto-Checking Active</span>
-            </div>
-
-        </div>
-
-        <!-- 3. Primary 3 Strategy Screener Tabs -->
-        <div class="grid grid-cols-3 gap-1.5 p-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl mb-4 shadow-sm">
-            <button onclick="switchStrategy('strategy-live', this)" id="strat-live-btn" class="strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 shadow-sm transition-all">
+            <!-- Tab 2: Live Pulse -->
+            <button onclick="switchStrategy('strategy-live', this)" id="strat-live-btn" class="strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 border border-transparent transition-all">
                 <i class="fa-solid fa-chart-pie"></i>
                 <span id="label-strat-1">Live Pulse</span>
             </button>
+
+            <!-- Tab 3: 9:25 Snapshot -->
             <button onclick="switchStrategy('strategy-925', this)" id="strat-925-btn" class="strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 border border-transparent transition-all">
                 <i class="fa-solid fa-clock text-blue-500"></i>
                 <span>9:25 Snapshot</span>
             </button>
+
+            <!-- Tab 4: 5M 5x Volume -->
             <button onclick="switchStrategy('strategy-breakout', this)" id="strat-breakout-btn" class="strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 border border-transparent transition-all">
                 <i class="fa-solid fa-bolt text-amber-500"></i>
                 <span>5M 5x Volume</span>
             </button>
+
         </div>
 
-        <!-- ================= TAB 1: LIVE PULSE ================= -->
-        <div id="strategy-live" class="strategy-view active">
+        <!-- ================= TAB 1: ALGO ENGINE (DEFAULT ACTIVE FIRST TAB) ================= -->
+        <div id="strategy-bot" class="strategy-view active">
+            <div class="bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-4 shadow-md transition-all">
+                
+                <!-- Status & Start/Stop Controls -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
+                    <div class="flex items-center gap-3">
+                        <div id="botIconContainer" class="h-11 w-11 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl shadow-sm">
+                            <i id="botIcon" class="fa-solid fa-robot"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="font-extrabold text-sm sm:text-base text-slate-800 dark:text-slate-100">Automated Bot Controller</span>
+                                <span id="botStatusBadge" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full border bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800 flex items-center gap-1">
+                                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span> RUNNING
+                                </span>
+                            </div>
+                            <p id="botStatusText" class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Running in background: Verifying C1/C2 Rules, Move Cap & Ladder Trailing</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 self-stretch sm:self-auto">
+                        <button onclick="startBot()" id="btnStartBot" class="flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md transition-all flex items-center justify-center gap-1.5 active:scale-95">
+                            <i class="fa-solid fa-play text-xs"></i> <span>Start Bot</span>
+                        </button>
+                        <button onclick="stopBot()" id="btnStopBot" class="flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-rose-600 hover:text-white shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-95">
+                            <i class="fa-solid fa-stop text-xs"></i> <span>Stop Bot</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Parameters Selection (3 Core Dropdowns) -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
+                    
+                    <!-- 1. Strategy Mode -->
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
+                            <i class="fa-solid fa-layer-group text-emerald-600 mr-1"></i> Strategy Mode:
+                        </label>
+                        <select id="algoStrategySelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm">
+                            <option value="combined">🚀 Combine Mode (Strat 1 + 2)</option>
+                            <option value="strat1">⚡ Strat 1 (5M 5x Vol Breakout)</option>
+                            <option value="strat2">⏰ Strat 2 (9:25 Top 5 Shortlisted)</option>
+                        </select>
+                    </div>
+
+                    <!-- 2. Max % Move Filter (1% to 10%) -->
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
+                            <i class="fa-solid fa-filter text-rose-500 mr-1"></i> Max C1 Move Cap:
+                        </label>
+                        <select id="algoMaxMoveSelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-rose-500 shadow-sm">
+                            <option value="1.0">Max 1.0% Move</option>
+                            <option value="1.5">Max 1.5% Move</option>
+                            <option value="2.0" selected>Max 2.0% Move</option>
+                            <option value="2.5">Max 2.5% Move</option>
+                            <option value="3.0">Max 3.0% Move</option>
+                            <option value="4.0">Max 4.0% Move</option>
+                            <option value="5.0">Max 5.0% Move</option>
+                            <option value="6.0">Max 6.0% Move</option>
+                            <option value="7.0">Max 7.0% Move</option>
+                            <option value="8.0">Max 8.0% Move</option>
+                            <option value="9.0">Max 9.0% Move</option>
+                            <option value="10.0">Max 10.0% Move</option>
+                        </select>
+                    </div>
+
+                    <!-- 3. Target Level with Built-in Half Book & Trailing Ladder -->
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
+                            <i class="fa-solid fa-bullseye text-indigo-600 mr-1"></i> Target Level & Trailing Ladder:
+                        </label>
+                        <select id="algoTargetSelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm">
+                            <option value="1">Target 1:1 (Quick Scalp)</option>
+                            <option value="2">Target 1:2 (50% Book @ 1:2 & SL to Cost)</option>
+                            <option value="3" selected>Target 1:3 (Half Book @ 1:2, 1:3 & SL to 1:1)</option>
+                            <option value="4">Target 1:4 (Half Book & Trail SL to 1:2)</option>
+                            <option value="5">Target 1:5 (Half Book & Trail SL to 1:3)</option>
+                            <option value="6">Target 1:6 (Half Book & Trail SL to 1:4)</option>
+                            <option value="7">Target 1:7 (Half Book & Trail SL to 1:5)</option>
+                            <option value="8">Target 1:8 (Half Book & Trail SL to 1:6)</option>
+                            <option value="9">Target 1:9 (Half Book & Trail SL to 1:7)</option>
+                            <option value="10">Target 1:10 (Max Trend: Half Book & Trail SL to 1:8)</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <!-- Live Trailing SL Ladder Explanation Card -->
+                <div class="mt-4 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span class="font-bold text-xs text-slate-800 dark:text-slate-200">Active Execution & Trailing Strategy:</span>
+                    </div>
+                    <p id="trailingRuleText" class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                        <b>1. Entry:</b> C2 Breakout (C2 High/Low) or Pullback C1 Break.<br>
+                        <b>2. Move Filter:</b> Only stocks with C1 move &le; 2.0% are executed.<br>
+                        <b>3. Partial Booking & Trailing Ladder:</b> At 1:2 R:R, book 50% & move SL to Cost. At 1:3 R:R, book 50% of remainder & trail SL to 1:1 profit.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ================= TAB 2: LIVE PULSE ================= -->
+        <div id="strategy-live" class="strategy-view">
             <div class="grid grid-cols-3 gap-1.5 p-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl mb-4 shadow-sm">
                 <button onclick="selectSubTab('tab-gainer', this, 'emerald')" id="subtab-1" class="sub-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 shadow-sm">
                     <i class="fa-solid fa-arrow-trend-up"></i>
@@ -279,7 +288,7 @@
             </section>
         </div>
 
-        <!-- ================= TAB 2: 9:25 SNAPSHOT ================= -->
+        <!-- ================= TAB 3: 9:25 SNAPSHOT ================= -->
         <div id="strategy-925" class="strategy-view">
             <div class="grid grid-cols-2 gap-2 p-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl mb-4 shadow-sm">
                 <button onclick="selectSnapSubTab('snap-gainer-view', this, 'emerald')" id="snap-sub-1" class="snap-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 shadow-sm">
@@ -347,7 +356,7 @@
             </section>
         </div>
 
-        <!-- ================= TAB 3: 5M 5x VOLUME BREAKOUT ================= -->
+        <!-- ================= TAB 4: 5M 5x VOLUME BREAKOUT ================= -->
         <div id="strategy-breakout" class="strategy-view">
             <section class="bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-md">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-slate-800 gap-2">
@@ -385,7 +394,7 @@
 
     <script>
         let currentSegment = 'fno';
-        let currentStrategy = 'strategy-live';
+        let currentStrategy = 'strategy-bot';
         let isBotRunning = true;
         let rawMarketData = null;
 
@@ -433,17 +442,17 @@
             const btnStop = document.getElementById('btnStopBot');
 
             if (isBotRunning) {
-                badge.className = "text-[10px] font-bold px-2 py-0.5 rounded-full border bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border-emerald-300 flex items-center gap-1";
+                badge.className = "text-[10px] font-bold px-2.5 py-0.5 rounded-full border bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border-emerald-300 flex items-center gap-1";
                 badge.innerHTML = `<span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span> RUNNING`;
-                desc.innerText = "Running in background: Checking C1/C2 rules & Max % Move cap";
-                iconBox.className = "h-10 w-10 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 text-emerald-600 flex items-center justify-center text-lg shadow-sm";
+                desc.innerText = "Running in background: Verifying C1/C2 Rules, Move Cap & Ladder Trailing";
+                iconBox.className = "h-11 w-11 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 text-emerald-600 flex items-center justify-center text-xl shadow-sm";
                 btnStart.className = "flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 text-white shadow-md flex items-center justify-center gap-1.5 opacity-100 cursor-default";
                 btnStop.className = "flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-rose-600 hover:text-white shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-95";
             } else {
-                badge.className = "text-[10px] font-bold px-2 py-0.5 rounded-full border bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-400 border-rose-300 flex items-center gap-1";
+                badge.className = "text-[10px] font-bold px-2.5 py-0.5 rounded-full border bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-400 border-rose-300 flex items-center gap-1";
                 badge.innerHTML = `<span class="h-1.5 w-1.5 rounded-full bg-rose-500"></span> PAUSED`;
                 desc.innerText = "Algo Bot is stopped. Background triggers paused.";
-                iconBox.className = "h-10 w-10 rounded-xl bg-rose-100 dark:bg-rose-950/80 border border-rose-300 text-rose-600 flex items-center justify-center text-lg shadow-sm";
+                iconBox.className = "h-11 w-11 rounded-xl bg-rose-100 dark:bg-rose-950/80 border border-rose-300 text-rose-600 flex items-center justify-center text-xl shadow-sm";
                 btnStart.className = "flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-emerald-600 hover:text-white shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-95";
                 btnStop.className = "flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-rose-600 text-white shadow-md flex items-center justify-center gap-1.5 opacity-100 cursor-default";
             }
@@ -452,15 +461,23 @@
 
         function onAlgoConfigChange() {
             const targetVal = parseInt(document.getElementById('algoTargetSelect').value);
-            const exitMode = document.getElementById('algoExitModeSelect').value;
             const maxMove = parseFloat(document.getElementById('algoMaxMoveSelect').value);
             const bannerText = document.getElementById('trailingRuleText');
 
-            if (exitMode === 'full') {
-                bannerText.innerHTML = `<b>Background Engine Active:</b> C1 Move &le; ${maxMove}% &bull; Entry on C1/C2 Break &bull; 100% Full exit @ 1:${targetVal}.`;
+            let ladderDesc = "";
+            if (targetVal === 1) {
+                ladderDesc = "100% quantity exit at 1:1 Target (No trailing).";
+            } else if (targetVal === 2) {
+                ladderDesc = "At 1:2 R:R, book 50% & move SL to Cost (Breakeven).";
+            } else if (targetVal === 3) {
+                ladderDesc = "At 1:2 R:R, book 50% & SL to Cost. At 1:3 R:R, book 50% of remainder & trail SL to 1:1 profit.";
             } else {
-                bannerText.innerHTML = `<b>Background Engine Active:</b> C1 Move &le; ${maxMove}% &bull; Entry on C1/C2 Break &bull; Target 1:${targetVal} (Half Book & Trail SL).`;
+                ladderDesc = `At 1:2 R:R, book 50% & SL to Cost. Continue booking half and step-by-step trail SL up to 1:${targetVal - 2} until Target 1:${targetVal}.`;
             }
+
+            bannerText.innerHTML = `<b>1. Entry:</b> C2 Breakout (C2 High/Low) or Pullback C1 Break.<br>
+            <b>2. Move Filter:</b> Only stocks with C1 move &le; ${maxMove}% are executed.<br>
+            <b>3. Partial Booking & Trailing Ladder:</b> ${ladderDesc}`;
         }
 
         function switchStrategy(stratId, element) {
