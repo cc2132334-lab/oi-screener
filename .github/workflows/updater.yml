@@ -2,9 +2,9 @@ name: Update Market Data
 
 on:
   schedule:
-    # Monday to Friday, Har 15 minute me chalega (IST Market Hours 9:15 AM - 3:30 PM)
+    # Monday to Friday, market hours me har 15 minute par chalega
     - cron: '*/15 3-10 * * 1-5'
-  workflow_dispatch: # Isse aap manual button dabakar bhi data update kar sakte hain
+  workflow_dispatch: # Manual run button
 
 permissions:
   contents: write
@@ -20,6 +20,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          pip install requests
 
       - name: Run Market Screener
         run: |
