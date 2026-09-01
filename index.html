@@ -3,170 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live OI & Volume Dashboard</title>
+    <title>Live Market Screener - F&O & Volume</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* Smooth tab transition */
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.25s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen p-4 sm:p-6 font-sans">
+<body class="bg-slate-950 text-slate-100 min-h-screen p-3 sm:p-6 font-sans">
 
-    <!-- Top Navigation Header -->
-    <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 mb-6 border-b border-slate-800 gap-3">
-        <div>
-            <h1 class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-                Live OI & Volume Screener
-            </h1>
-            <p class="text-xs sm:text-sm text-slate-400">Cloud-Powered Automated Market Analytics</p>
-        </div>
-        <div class="flex items-center gap-3 bg-slate-900 border border-slate-800 px-4 py-2 rounded-lg">
-            <span class="relative flex h-3 w-3">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-            </span>
+    <div class="max-w-4xl mx-auto">
+        <!-- Top Header -->
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 mb-5 border-b border-slate-800 gap-3">
             <div>
-                <span class="text-xs text-slate-400 block">Cloud Updated:</span>
-                <span id="lastUpdated" class="text-sm font-semibold text-slate-200">Loading...</span>
+                <h1 class="text-xl sm:text-2xl font-black bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent flex items-center gap-2">
+                    <i class="fa-solid fa-chart-line text-emerald-400"></i> Market Pulse Screener
+                </h1>
+                <p class="text-xs text-slate-400 mt-0.5">Top 10 OI Gainers, OI Losers & Volume Shockers</p>
             </div>
+            
+            <div class="flex items-center gap-2.5 bg-slate-900 border border-slate-800 px-3.5 py-1.5 rounded-xl self-stretch sm:self-auto justify-between sm:justify-start">
+                <span class="relative flex h-2.5 w-2.5">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                </span>
+                <div class="text-right">
+                    <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Updated</span>
+                    <span id="lastUpdated" class="text-xs font-mono font-bold text-slate-200">Loading...</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Tabs Navigation Bar -->
+        <div class="grid grid-cols-3 gap-1.5 p-1 bg-slate-900/90 border border-slate-800 rounded-xl mb-5 shadow-lg">
+            
+            <button onclick="switchTab('tab-oi-gainers', this)" class="tab-btn active py-2.5 px-2 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                <i class="fa-solid fa-arrow-trend-up"></i>
+                <span>OI Gainers</span>
+            </button>
+
+            <button onclick="switchTab('tab-oi-losers', this)" class="tab-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-200 border border-transparent">
+                <i class="fa-solid fa-arrow-trend-down"></i>
+                <span>OI Losers</span>
+            </button>
+
+            <button onclick="switchTab('tab-volume', this)" class="tab-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-200 border border-transparent">
+                <i class="fa-solid fa-bolt"></i>
+                <span>Volume</span>
+            </button>
+
         </div>
-    </header>
 
-    <!-- Main Grid Dashboard -->
-    <main class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-        <!-- Card 1: Top OI Gainers -->
-        <section class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl">
-            <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
-                <h2 class="text-lg font-bold text-emerald-400 flex items-center gap-2">
-                    <i class="fa-solid fa-arrow-trend-up"></i> Top OI Gainers
+        <!-- Tab 1: Top 10 OI Gainers -->
+        <section id="tab-oi-gainers" class="tab-content active bg-slate-900/80 border border-slate-800/90 rounded-2xl p-4 shadow-2xl backdrop-blur-sm">
+            <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800/80">
+                <h2 class="text-sm sm:text-base font-bold text-emerald-400 flex items-center gap-2">
+                    <span class="flex h-2 w-2 rounded-full bg-emerald-400"></span> Top 10 Open Interest Gainers
                 </h2>
-                <span class="text-xs bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded border border-emerald-800">Fresh Positions</span>
+                <span class="text-[11px] bg-emerald-950 text-emerald-400 font-medium px-2 py-0.5 rounded border border-emerald-800">Fresh Longs</span>
             </div>
+            
             <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm">
+                <table class="w-full text-left text-xs sm:text-sm whitespace-nowrap">
                     <thead>
-                        <tr class="text-slate-400 border-b border-slate-800/80 text-xs">
-                            <th class="pb-2">Symbol</th>
-                            <th class="pb-2">LTP</th>
-                            <th class="pb-2">OI Chg</th>
-                            <th class="pb-2 text-right">Trend</th>
+                        <tr class="text-slate-400 border-b border-slate-800 text-[11px] uppercase tracking-wider">
+                            <th class="py-2.5 px-2">#</th>
+                            <th class="py-2.5 px-2">Symbol</th>
+                            <th class="py-2.5 px-2">LTP</th>
+                            <th class="py-2.5 px-2">OI Chg %</th>
+                            <th class="py-2.5 px-2">Volume</th>
+                            <th class="py-2.5 px-2 text-right">Interpretation</th>
                         </tr>
                     </thead>
-                    <tbody id="oiGainersBody" class="divide-y divide-slate-800/40">
-                        <tr><td colspan="4" class="text-center py-6 text-slate-500">Data loading...</td></tr>
+                    <tbody id="oiGainersBody" class="divide-y divide-slate-800/50">
+                        <tr><td colspan="6" class="text-center py-8 text-slate-500">Fetching live market data...</td></tr>
                     </tbody>
                 </table>
             </div>
         </section>
 
-        <!-- Card 2: Top OI Losers -->
-        <section class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl">
-            <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
-                <h2 class="text-lg font-bold text-rose-400 flex items-center gap-2">
-                    <i class="fa-solid fa-arrow-trend-down"></i> Top OI Losers
+        <!-- Tab 2: Top 10 OI Losers -->
+        <section id="tab-oi-losers" class="tab-content bg-slate-900/80 border border-slate-800/90 rounded-2xl p-4 shadow-2xl backdrop-blur-sm">
+            <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800/80">
+                <h2 class="text-sm sm:text-base font-bold text-rose-400 flex items-center gap-2">
+                    <span class="flex h-2 w-2 rounded-full bg-rose-400"></span> Top 10 Open Interest Losers
                 </h2>
-                <span class="text-xs bg-rose-950 text-rose-400 px-2 py-0.5 rounded border border-rose-800">Unwinding</span>
+                <span class="text-[11px] bg-rose-950 text-rose-400 font-medium px-2 py-0.5 rounded border border-rose-800">Position Exit</span>
             </div>
+            
             <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm">
+                <table class="w-full text-left text-xs sm:text-sm whitespace-nowrap">
                     <thead>
-                        <tr class="text-slate-400 border-b border-slate-800/80 text-xs">
-                            <th class="pb-2">Symbol</th>
-                            <th class="pb-2">LTP</th>
-                            <th class="pb-2">OI Chg</th>
-                            <th class="pb-2 text-right">Trend</th>
+                        <tr class="text-slate-400 border-b border-slate-800 text-[11px] uppercase tracking-wider">
+                            <th class="py-2.5 px-2">#</th>
+                            <th class="py-2.5 px-2">Symbol</th>
+                            <th class="py-2.5 px-2">LTP</th>
+                            <th class="py-2.5 px-2">OI Chg %</th>
+                            <th class="py-2.5 px-2">Volume</th>
+                            <th class="py-2.5 px-2 text-right">Interpretation</th>
                         </tr>
                     </thead>
-                    <tbody id="oiLosersBody" class="divide-y divide-slate-800/40">
-                        <tr><td colspan="4" class="text-center py-6 text-slate-500">Data loading...</td></tr>
+                    <tbody id="oiLosersBody" class="divide-y divide-slate-800/50">
+                        <tr><td colspan="6" class="text-center py-8 text-slate-500">Fetching live market data...</td></tr>
                     </tbody>
                 </table>
             </div>
         </section>
 
-        <!-- Card 3: Top Volume Gainers -->
-        <section class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl">
-            <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
-                <h2 class="text-lg font-bold text-cyan-400 flex items-center gap-2">
-                    <i class="fa-solid fa-bolt"></i> Volume Shockers
+        <!-- Tab 3: Top 10 Volume Gainers -->
+        <section id="tab-volume" class="tab-content bg-slate-900/80 border border-slate-800/90 rounded-2xl p-4 shadow-2xl backdrop-blur-sm">
+            <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800/80">
+                <h2 class="text-sm sm:text-base font-bold text-cyan-400 flex items-center gap-2">
+                    <span class="flex h-2 w-2 rounded-full bg-cyan-400"></span> Top 10 Volume Shockers
                 </h2>
-                <span class="text-xs bg-cyan-950 text-cyan-400 px-2 py-0.5 rounded border border-cyan-800">Activity Spike</span>
+                <span class="text-[11px] bg-cyan-950 text-cyan-400 font-medium px-2 py-0.5 rounded border border-cyan-800">High Traded Activity</span>
             </div>
+            
             <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm">
+                <table class="w-full text-left text-xs sm:text-sm whitespace-nowrap">
                     <thead>
-                        <tr class="text-slate-400 border-b border-slate-800/80 text-xs">
-                            <th class="pb-2">Symbol</th>
-                            <th class="pb-2">LTP</th>
-                            <th class="pb-2">Vol Spike</th>
-                            <th class="pb-2 text-right">Price %</th>
+                        <tr class="text-slate-400 border-b border-slate-800 text-[11px] uppercase tracking-wider">
+                            <th class="py-2.5 px-2">#</th>
+                            <th class="py-2.5 px-2">Symbol</th>
+                            <th class="py-2.5 px-2">LTP</th>
+                            <th class="py-2.5 px-2">Price Chg %</th>
+                            <th class="py-2.5 px-2">Total Volume</th>
+                            <th class="py-2.5 px-2 text-right">Status</th>
                         </tr>
                     </thead>
-                    <tbody id="volGainersBody" class="divide-y divide-slate-800/40">
-                        <tr><td colspan="4" class="text-center py-6 text-slate-500">Data loading...</td></tr>
+                    <tbody id="volGainersBody" class="divide-y divide-slate-800/50">
+                        <tr><td colspan="6" class="text-center py-8 text-slate-500">Fetching live market data...</td></tr>
                     </tbody>
                 </table>
             </div>
         </section>
 
-    </main>
+    </div>
 
+    <!-- Script Logic -->
     <script>
+        // Tab Switch Logic
+        function switchTab(tabId, clickedBtn) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-emerald-500/15', 'bg-rose-500/15', 'bg-cyan-500/15', 'text-emerald-400', 'text-rose-400', 'text-cyan-400', 'border-emerald-500/30', 'border-rose-500/30', 'border-cyan-500/30');
+                btn.classList.add('text-slate-400', 'border-transparent');
+            });
+
+            document.getElementById(tabId).classList.add('active');
+            clickedBtn.classList.remove('text-slate-400', 'border-transparent');
+
+            if (tabId === 'tab-oi-gainers') {
+                clickedBtn.classList.add('active', 'bg-emerald-500/15', 'text-emerald-400', 'border-emerald-500/30');
+            } else if (tabId === 'tab-oi-losers') {
+                clickedBtn.classList.add('active', 'bg-rose-500/15', 'text-rose-400', 'border-rose-500/30');
+            } else {
+                clickedBtn.classList.add('active', 'bg-cyan-500/15', 'text-cyan-400', 'border-cyan-500/30');
+            }
+        }
+
+        // Build Trend Badges
         function getTrendBadge(trend) {
-            const map = {
+            const styles = {
                 "Long Buildup": "bg-emerald-950 text-emerald-400 border-emerald-800",
                 "Short Buildup": "bg-rose-950 text-rose-400 border-rose-800",
                 "Short Covering": "bg-sky-950 text-sky-400 border-sky-800",
                 "Long Unwinding": "bg-amber-950 text-amber-400 border-amber-800"
             };
-            return `<span class="px-2 py-0.5 rounded text-[11px] font-medium border ${map[trend] || 'bg-slate-800 text-slate-300'}">${trend}</span>`;
+            return `<span class="px-2 py-0.5 rounded text-[11px] font-medium border ${styles[trend] || 'bg-slate-800 text-slate-300'}">${trend}</span>`;
         }
 
+        // Load and Populate Data
         async function fetchMarketData() {
             try {
-                // Fetch JSON with timestamp to bypass cache
                 const response = await fetch('data.json?cache=' + new Date().getTime());
-                if (!response.ok) throw new Error("Network response was not ok");
+                if (!response.ok) return;
                 const data = await response.json();
 
                 document.getElementById('lastUpdated').innerText = data.last_updated;
 
-                // Render OI Gainers
-                document.getElementById('oiGainersBody').innerHTML = data.oi_gainers.map(item => `
+                // 1. Render OI Gainers
+                document.getElementById('oiGainersBody').innerHTML = data.oi_gainers.map((s, idx) => `
                     <tr class="hover:bg-slate-800/40 transition-colors">
-                        <td class="py-2.5 font-semibold text-slate-200">${item.symbol}</td>
-                        <td class="py-2.5">₹${item.ltp}</td>
-                        <td class="py-2.5 text-emerald-400 font-bold">+${item.oiChange}%</td>
-                        <td class="py-2.5 text-right">${getTrendBadge(item.trend)}</td>
+                        <td class="py-2 px-2 text-slate-500 font-mono">${idx + 1}</td>
+                        <td class="py-2 px-2 font-bold text-slate-200">${s.symbol}</td>
+                        <td class="py-2 px-2">₹${s.ltp}</td>
+                        <td class="py-2 px-2 font-bold text-emerald-400">+${s.oiChange}%</td>
+                        <td class="py-2 px-2 text-slate-400 font-mono text-xs">${s.volume}</td>
+                        <td class="py-2 px-2 text-right">${getTrendBadge(s.trend)}</td>
                     </tr>
                 `).join('');
 
-                // Render OI Losers
-                document.getElementById('oiLosersBody').innerHTML = data.oi_losers.map(item => `
+                // 2. Render OI Losers
+                document.getElementById('oiLosersBody').innerHTML = data.oi_losers.map((s, idx) => `
                     <tr class="hover:bg-slate-800/40 transition-colors">
-                        <td class="py-2.5 font-semibold text-slate-200">${item.symbol}</td>
-                        <td class="py-2.5">₹${item.ltp}</td>
-                        <td class="py-2.5 text-rose-400 font-bold">${item.oiChange}%</td>
-                        <td class="py-2.5 text-right">${getTrendBadge(item.trend)}</td>
+                        <td class="py-2 px-2 text-slate-500 font-mono">${idx + 1}</td>
+                        <td class="py-2 px-2 font-bold text-slate-200">${s.symbol}</td>
+                        <td class="py-2 px-2">₹${s.ltp}</td>
+                        <td class="py-2 px-2 font-bold text-rose-400">${s.oiChange}%</td>
+                        <td class="py-2 px-2 text-slate-400 font-mono text-xs">${s.volume}</td>
+                        <td class="py-2 px-2 text-right">${getTrendBadge(s.trend)}</td>
                     </tr>
                 `).join('');
 
-                // Render Volume Gainers
-                document.getElementById('volGainersBody').innerHTML = data.volume_gainers.map(item => `
+                // 3. Render Volume Gainers
+                document.getElementById('volGainersBody').innerHTML = data.volume_gainers.map((s, idx) => `
                     <tr class="hover:bg-slate-800/40 transition-colors">
-                        <td class="py-2.5 font-semibold text-slate-200">${item.symbol}</td>
-                        <td class="py-2.5">₹${item.ltp}</td>
-                        <td class="py-2.5 text-cyan-400 font-bold">+${item.volChange}%</td>
-                        <td class="py-2.5 text-right font-semibold ${item.pChange >= 0 ? 'text-emerald-400' : 'text-rose-400'}">
-                            ${item.pChange >= 0 ? '+' : ''}${item.pChange}%
+                        <td class="py-2 px-2 text-slate-500 font-mono">${idx + 1}</td>
+                        <td class="py-2 px-2 font-bold text-slate-200">${s.symbol}</td>
+                        <td class="py-2 px-2">₹${s.ltp}</td>
+                        <td class="py-2 px-2 font-bold ${s.pChange >= 0 ? 'text-emerald-400' : 'text-rose-400'}">
+                            ${s.pChange >= 0 ? '+' : ''}${s.pChange}%
+                        </td>
+                        <td class="py-2 px-2 text-cyan-400 font-mono font-semibold text-xs">${s.volume}</td>
+                        <td class="py-2 px-2 text-right">
+                            <span class="px-2 py-0.5 rounded text-[11px] font-medium border bg-cyan-950 text-cyan-400 border-cyan-800">Spike</span>
                         </td>
                     </tr>
                 `).join('');
 
             } catch (err) {
-                console.error("Waiting for data.json generation...", err);
+                console.error("Data refresh error:", err);
             }
         }
 
-        // Fetch on load & auto reload every 15 seconds in browser
+        // Initialize & Auto-refresh every 15s in client
         fetchMarketData();
         setInterval(fetchMarketData, 15000);
     </script>
