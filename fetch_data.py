@@ -29,62 +29,6 @@ def calculate_trend(p_change, oi_change):
     else:
         return "Long Unwinding"
 
-def calculate_algo_signals(stock, strategy_source):
-    ltp = stock["ltp"]
-    p_chg = stock["pChange"]
-    is_buy = p_chg >= 0
-
-    c1_high = round(ltp * (1.008 if is_buy else 1.002), 2)
-    c1_low = round(ltp * (0.992 if is_buy else 0.988), 2)
-
-    is_direct_breakout = random.choice([True, False])
-    if is_buy:
-        if is_direct_breakout:
-            c2_high = round(c1_high * 1.006, 2)
-            c2_low = round(c1_low * 1.004, 2)
-            scenario = "Scenario A (C2 Close > C1 High)"
-            entry_price = c2_high
-            sl_price = c2_low
-        else:
-            c2_high = round(c1_high * 1.002, 2)
-            c2_low = round(c1_low * 0.998, 2)
-            scenario = "Scenario B (C2 Inside Close)"
-            entry_price = c1_high
-            sl_price = c2_low
-
-        risk = max(round(entry_price - sl_price, 2), 1.0)
-        signal_type = "BUY"
-    else:
-        if is_direct_breakout:
-            c2_low = round(c1_low * 0.994, 2)
-            c2_high = round(c1_high * 0.996, 2)
-            scenario = "Scenario A (C2 Close < C1 Low)"
-            entry_price = c2_low
-            sl_price = c2_high
-        else:
-            c2_low = round(c1_low * 0.998, 2)
-            c2_high = round(c1_high * 1.002, 2)
-            scenario = "Scenario B (C2 Inside Close)"
-            entry_price = c1_low
-            sl_price = c2_high
-
-        risk = max(round(sl_price - entry_price, 2), 1.0)
-        signal_type = "SELL"
-
-    return {
-        "symbol": stock["symbol"],
-        "strategy": strategy_source,
-        "signal": signal_type,
-        "scenario": scenario,
-        "ltp": ltp,
-        "pChange": p_chg,
-        "abs_move": abs(p_chg),
-        "entry": entry_price,
-        "sl": sl_price,
-        "risk": risk,
-        "status": "Ready for Execution"
-    }
-
 def generate_stock_data(symbols, is_fno=True):
     stock_list = []
     for sym in symbols:
@@ -142,43 +86,47 @@ def fetch_market_data():
     cash_vol_gainers = sorted(cash_stocks, key=lambda x: x["volChange"], reverse=True)[:10]
     cash_breakouts = sorted([s for s in cash_stocks if s["breakout_type"] != "Inside Range"], key=lambda x: x["volChange"], reverse=True)[:8]
 
-    fno_top5_925 = fno_oi_gainers[:5]
-    cash_top5_925 = cash_gainers[:5]
-
-    fno_algo_strat1 = [calculate_algo_signals(s, "Strategy 1 (5x Vol)") for s in fno_breakouts[:6]]
-    fno_algo_strat2 = [calculate_algo_signals(s, "Strategy 2 (9:25 Top 5)") for s in fno_top5_925]
-    fno_algo_combined = fno_algo_strat1 + fno_algo_strat2
-
-    cash_algo_strat1 = [calculate_algo_signals(s, "Strategy 1 (5x Vol)") for s in cash_breakouts[:6]]
-    cash_algo_strat2 = [calculate_algo_signals(s, "Strategy 2 (9:25 Top 5)") for s in cash_top5_925]
-    cash_algo_combined = cash_algo_strat1 + cash_algo_strat2
-
     ist_now = datetime.now(timezone(timedelta(hours=5, minutes=30)))
     today_str = ist_now.strftime("%Y-%m-%d")
     current_time_str = ist_now.strftime("%I:%M:%S %p IST")
 
-    snap_fno = {"captured_at": "09:25 AM IST", "is_locked": True, "gainers": [{"symbol": s["symbol"], "snap_ltp": s["ltp"], "current_ltp": s["ltp"], "snap_metric": s["oiChange"], "current_metric": s["oiChange"], "trend": s["trend"]} for s in fno_oi_gainers], "losers": [{"symbol": s["symbol"], "snap_ltp": s["ltp"], "current_ltp": s["ltp"], "snap_metric": s["oiChange"], "current_metric": s["oiChange"], "trend": s["trend"]} for s in fno_oi_losers]}
-    snap_cash = {"captured_at": "09:25 AM IST", "is_locked": True, "gainers": [{"symbol": s["symbol"], "snap_ltp": s["ltp"], "current_ltp": s["ltp"], "snap_metric": s["pChange"], "current_metric": s["pChange"], "trend": s["trend"]} for s in cash_gainers], "losers": [{"symbol": s["symbol"], "snap_ltp": s["ltp"], "current_ltp": s["ltp"], "snap_metric": s["pChange"], "current_metric": s["pChange"], "trend": s["trend"]} for s in cash_losers]}
+    snap_fno = {
+        "captured_at": "09:25 AM IST",
+        "is_locked": True,
+        "gainers": [{"symbol": s["symbol"], "snap_ltp": s["ltp"], "current_ltp": s["ltp"], "snap_metric": s["oiChange"], "current_metric": s["oiChange"], "trend": s["trend"]} for s in fno_oi_gainers],
+        "losers": [{"symbol": s["symbol"], "snap_ltp": s["ltp"], "current_ltp": s["ltp"], "snap_metric": s["oiChange"], "current_metric": s["oiChange"], "trend": s["trend"]} for s in fno_oi_losers]
+    }
+
+    snap_cash = {
+        "captured_at": "09:25 AM IST",
+        "is_locked": True,
+        "gainers": [{"symbol": s["symbol"], "snap_ltp": s["ltp"], "current_ltp": s["ltp"], "snap_metric": s["pChange"], "current_metric": s["pChange"], "trend": s["trend"]} for s in cash_gainers],
+        "losers": [{"symbol": s["symbol"], "snap_ltp": s["ltp"], "current_ltp": s["ltp"], "snap_metric": s["pChange"], "current_metric": s["pChange"], "trend": s["trend"]} for s in cash_losers]
+    }
 
     output = {
         "last_updated": current_time_str,
         "snapshot_date": today_str,
         "fno": {
-            "gainers": fno_oi_gainers, "losers": fno_oi_losers, "volume_gainers": fno_vol_gainers,
-            "snapshot_925": snap_fno, "breakouts_5m": fno_breakouts,
-            "algo_signals": {"strat1": fno_algo_strat1, "strat2": fno_algo_strat2, "combined": fno_algo_combined}
+            "gainers": fno_oi_gainers,
+            "losers": fno_oi_losers,
+            "volume_gainers": fno_vol_gainers,
+            "snapshot_925": snap_fno,
+            "breakouts_5m": fno_breakouts
         },
         "cash": {
-            "gainers": cash_gainers, "losers": cash_losers, "volume_gainers": cash_vol_gainers,
-            "snapshot_925": snap_cash, "breakouts_5m": cash_breakouts,
-            "algo_signals": {"strat1": cash_algo_strat1, "strat2": cash_algo_strat2, "combined": cash_algo_combined}
+            "gainers": cash_gainers,
+            "losers": cash_losers,
+            "volume_gainers": cash_vol_gainers,
+            "snapshot_925": snap_cash,
+            "breakouts_5m": cash_breakouts
         }
     }
 
     with open("data.json", "w") as f:
         json.dump(output, f, indent=4)
 
-    print(f"data.json successfully updated with Max % Move filter at {current_time_str}")
+    print(f"data.json updated cleanly at {current_time_str}")
 
 if __name__ == "__main__":
     fetch_market_data()
