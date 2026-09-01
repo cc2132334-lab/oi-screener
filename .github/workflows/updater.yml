@@ -1,0 +1,33 @@
+name: Update Market Data
+
+on:
+  schedule:
+    # Monday to Friday, Har 15 minute me chalega (IST Market Hours 9:15 AM - 3:30 PM)
+    - cron: '*/15 3-10 * * 1-5'
+  workflow_dispatch: # Isse aap manual button dabakar bhi data update kar sakte hain
+
+permissions:
+  contents: write
+
+jobs:
+  run-screener:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Run Market Screener
+        run: |
+          python fetch_data.py
+
+      - name: Save and Commit Data to Repo
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add data.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto updated market data" && git push)
