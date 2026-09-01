@@ -197,7 +197,7 @@
                                     <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span> RUNNING
                                 </span>
                             </div>
-                            <p id="botStatusText" class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Google Sheet Synced &bull; Continuous Trailing Active</p>
+                            <p id="botStatusText" class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Continuous half-booking trail until selected target full exit</p>
                         </div>
                     </div>
 
@@ -310,7 +310,7 @@
             <div class="bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-md">
                 <div class="flex items-center justify-between pb-2.5 mb-2 border-b border-slate-200 dark:border-slate-800 text-xs">
                     <div class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                        <i class="fa-solid fa-list-check text-emerald-600 dark:text-emerald-400"></i> Today's Bot Executed Trades Log
+                        <i class="fa-solid fa-list-check text-emerald-600 dark:text-emerald-400"></i> Today's Bot Executed Trades Log (Sized: Risk / |Entry - SL|)
                     </div>
                     <span id="tradeTableLimitStatus" class="text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 font-bold px-2 py-0.5 rounded border border-emerald-300">
                         Trading Active
@@ -324,6 +324,7 @@
                                 <th class="py-2.5 px-2">Time</th>
                                 <th class="py-2.5 px-2">Symbol</th>
                                 <th class="py-2.5 px-2">Signal</th>
+                                <th class="py-2.5 px-2">Qty</th>
                                 <th class="py-2.5 px-2">Entry</th>
                                 <th class="py-2.5 px-2">SL</th>
                                 <th class="py-2.5 px-2">LTP</th>
@@ -332,7 +333,7 @@
                             </tr>
                         </thead>
                         <tbody id="executedTradesBody" class="divide-y divide-slate-100 dark:divide-slate-800/60">
-                            <tr><td colspan="8" class="text-center py-6 text-slate-400">Loading executed trades...</td></tr>
+                            <tr><td colspan="9" class="text-center py-6 text-slate-400">Loading executed trades...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -499,17 +500,17 @@
             </section>
         </div>
 
-        <!-- ================= TAB 4: 5M 5x VOLUME BREAKOUT ================= -->
+        <!-- ================= TAB 4: 5M 5x VOLUME BREAKOUT (ALL STOCKS DESCENDING) ================= -->
         <div id="strategy-breakout" class="strategy-view">
             <section class="bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-md">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-slate-800 gap-2">
                     <div>
                         <div id="breakoutTitle" class="font-bold text-amber-600 dark:text-amber-400 text-sm sm:text-base flex items-center gap-1.5">
-                            <i class="fa-solid fa-bolt"></i> 1st 5-Min Opening Breakout (F&O Stocks)
+                            <i class="fa-solid fa-bolt"></i> 1st 5-Min Opening Breakout (Highest X Vol on Top)
                         </div>
                         <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Filter: 1st 5M Volume &ge; 5x (20 MA Volume) + Closed above PDH / below PDL</p>
                     </div>
-                    <span id="breakoutBadge" class="text-[10px] bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-400 font-semibold px-2.5 py-1 rounded-lg border border-amber-300">F&O Setups</span>
+                    <span id="breakoutBadge" class="text-[10px] bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-400 font-semibold px-2.5 py-1 rounded-lg border border-amber-300">All Breakouts</span>
                 </div>
 
                 <div class="overflow-x-auto">
@@ -521,7 +522,7 @@
                                 <th class="py-2.5 px-2">LTP</th>
                                 <th class="py-2.5 px-2">5M Close</th>
                                 <th class="py-2.5 px-2">PDH / PDL Level</th>
-                                <th class="py-2.5 px-2">Vol vs 20MA</th>
+                                <th class="py-2.5 px-2">Vol Multiplier (Highest &darr;)</th>
                                 <th class="py-2.5 px-2 text-right">Breakout Signal</th>
                             </tr>
                         </thead>
@@ -830,8 +831,8 @@
                 document.getElementById('label-snap-2').innerText = "9:25 AM OI Losers";
                 document.getElementById('snapGainerHeading').innerHTML = `<i class="fa-solid fa-lock"></i> Frozen Snapshot @ 09:25 AM (Top F&O OI Gainers)`;
                 document.getElementById('snapLoserHeading').innerHTML = `<i class="fa-solid fa-lock"></i> Frozen Snapshot @ 09:25 AM (Top F&O OI Losers)`;
-                document.getElementById('breakoutTitle').innerHTML = `<i class="fa-solid fa-bolt"></i> 1st 5-Min Opening Breakout (F&O Stocks)`;
-                document.getElementById('breakoutBadge').innerText = "F&O Setups";
+                document.getElementById('breakoutTitle').innerHTML = `<i class="fa-solid fa-bolt"></i> 1st 5-Min Opening Breakout (Highest X Vol on Top)`;
+                document.getElementById('breakoutBadge').innerText = "All Breakouts";
 
             } else {
                 cashBtn.className = "flex-1 py-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all bg-white dark:bg-slate-800 text-cyan-700 dark:text-cyan-400 shadow-sm";
@@ -854,8 +855,8 @@
                 document.getElementById('label-snap-2').innerText = "9:25 AM Price Losers";
                 document.getElementById('snapGainerHeading').innerHTML = `<i class="fa-solid fa-lock"></i> Frozen Snapshot @ 09:25 AM (Top Cash Price Gainers)`;
                 document.getElementById('snapLoserHeading').innerHTML = `<i class="fa-solid fa-lock"></i> Frozen Snapshot @ 09:25 AM (Top Cash Price Losers)`;
-                document.getElementById('breakoutTitle').innerHTML = `<i class="fa-solid fa-bolt"></i> 1st 5-Min Opening Breakout (Cash Momentum Stocks)`;
-                document.getElementById('breakoutBadge').innerText = "Cash Setups";
+                document.getElementById('breakoutTitle').innerHTML = `<i class="fa-solid fa-bolt"></i> 1st 5-Min Opening Breakout (Highest X Vol on Top)`;
+                document.getElementById('breakoutBadge').innerText = "All Breakouts";
             }
 
             renderTables();
@@ -901,6 +902,7 @@
             const maxTradesLimit = parseInt(document.getElementById('algoTradeLimitInput').value) || 3;
             const maxMoveCap = parseFloat(document.getElementById('algoMaxMoveInput').value) || 2.0;
             const maxDailyLoss = parseFloat(document.getElementById('algoDailyLossInput').value) || 2000;
+            const riskPerTrade = parseFloat(document.getElementById('algoRiskPerTradeInput').value) || 1000;
             const targetVal = parseInt(document.getElementById('algoTargetSelect').value);
             const allTrades = data.executed_trades || [];
 
@@ -912,6 +914,12 @@
             let winningTrades = 0;
 
             executedTrades.forEach(t => {
+                // Dynamically re-calculate Quantity based on user's manual Risk Per Trade input
+                const recalculatedQty = Math.max(1, Math.floor(riskPerTrade / t.risk));
+                const pnlPerShare = t.pnl / t.qty;
+                t.qty = recalculatedQty;
+                t.pnl = Math.round(pnlPerShare * recalculatedQty);
+
                 totalPnl += t.pnl;
                 if (t.status.includes('Hit') || t.status.includes('Booked')) {
                     realizedPnl += t.pnl;
@@ -953,9 +961,9 @@
             }
 
             if (!isBotRunning || isKillSwitchTriggered) {
-                document.getElementById('executedTradesBody').innerHTML = `<tr><td colspan="8" class="text-center py-6 text-rose-500 font-semibold"><i class="fa-solid fa-pause mr-1"></i> Algo Execution is currently paused.</td></tr>`;
+                document.getElementById('executedTradesBody').innerHTML = `<tr><td colspan="9" class="text-center py-6 text-rose-500 font-semibold"><i class="fa-solid fa-pause mr-1"></i> Algo Execution is currently paused.</td></tr>`;
             } else if (executedTrades.length === 0) {
-                document.getElementById('executedTradesBody').innerHTML = `<tr><td colspan="8" class="text-center py-6 text-slate-400 font-medium"><i class="fa-solid fa-filter mr-1"></i> No trades executed yet within Max ${maxMoveCap}% Move cap. Scanning market...</td></tr>`;
+                document.getElementById('executedTradesBody').innerHTML = `<tr><td colspan="9" class="text-center py-6 text-slate-400 font-medium"><i class="fa-solid fa-filter mr-1"></i> No trades executed yet within Max ${maxMoveCap}% Move cap. Scanning market...</td></tr>`;
             } else {
                 document.getElementById('executedTradesBody').innerHTML = executedTrades.map(t => {
                     const isBuy = t.signal === "BUY";
@@ -981,6 +989,7 @@
                         <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${t.time}</td>
                         <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${t.symbol}</td>
                         <td class="py-2.5 px-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-bold border ${isBuy ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border-emerald-300' : 'bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-400 border-rose-300'}">${t.signal}</span></td>
+                        <td class="py-2.5 px-2 font-mono font-bold text-slate-700 dark:text-slate-300">${t.qty}</td>
                         <td class="py-2.5 px-2 font-mono font-semibold text-slate-800 dark:text-slate-200">₹${t.entry}</td>
                         <td class="py-2.5 px-2 font-mono text-rose-600 dark:text-rose-400">₹${t.sl}</td>
                         <td class="py-2.5 px-2 font-mono font-bold text-slate-700 dark:text-slate-300">₹${t.current_ltp}</td>
@@ -990,7 +999,7 @@
                 }).join('');
             }
 
-            // Screener Tables
+            // Screener Tables (Pulse & Snapshot)
             if (currentSegment === 'fno') {
                 document.getElementById('gainerBody').innerHTML = (data.gainers || []).slice(0, 10).map((s, idx) => `
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
@@ -1064,20 +1073,28 @@
                     <td class="py-2.5 px-2 text-right">${getBadge(s.trend)}</td>
                 </tr>`).join('');
 
-            const breakouts = data.breakouts_5m || [];
-            document.getElementById('breakoutBody').innerHTML = breakouts.map((s, idx) => {
-                const isBullish = s.breakout_type.includes('Bullish');
-                return `
-                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                    <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${idx + 1}</td>
-                    <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${s.symbol}</td>
-                    <td class="py-2.5 px-2 font-medium">₹${s.ltp}</td>
-                    <td class="py-2.5 px-2 font-mono font-bold text-emerald-600">₹${s.first_5m_close}</td>
-                    <td class="py-2.5 px-2 font-mono text-slate-600">${isBullish ? 'PDH: ₹' + s.pdh : 'PDL: ₹' + s.pdl}</td>
-                    <td class="py-2.5 px-2 font-bold text-amber-600 font-mono">${s.vol_ratio}x</td>
-                    <td class="py-2.5 px-2 text-right"><span class="px-2 py-0.5 rounded text-[11px] font-bold border">${s.breakout_type}</span></td>
-                </tr>`;
-            }).join('');
+            // 4. TAB 4: 5M 5x BREAKOUT TAB (ALL STOCKS SORTED DESCENDING BY X MULTIPLIER)
+            const rawBreakouts = data.breakouts_5m || [];
+            const breakouts = rawBreakouts.sort((a, b) => (b.vol_ratio || 0) - (a.vol_ratio || 0));
+
+            const breakoutBody = document.getElementById('breakoutBody');
+            if (breakouts.length === 0) {
+                breakoutBody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-slate-400 font-medium">No stocks matching &ge; 5x Volume breakout currently.</td></tr>`;
+            } else {
+                breakoutBody.innerHTML = breakouts.map((s, idx) => {
+                    const isBullish = s.breakout_type.includes('Bullish');
+                    return `
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                        <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${idx + 1}</td>
+                        <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${s.symbol}</td>
+                        <td class="py-2.5 px-2 font-medium">₹${s.ltp}</td>
+                        <td class="py-2.5 px-2 font-mono font-bold ${isBullish ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">₹${s.first_5m_close}</td>
+                        <td class="py-2.5 px-2 font-mono text-slate-600 dark:text-slate-300">${isBullish ? 'PDH: ₹' + s.pdh : 'PDL: ₹' + s.pdl}</td>
+                        <td class="py-2.5 px-2 font-black text-amber-500 dark:text-amber-400 font-mono text-sm">${s.vol_ratio}x</td>
+                        <td class="py-2.5 px-2 text-right"><span class="px-2 py-0.5 rounded text-[11px] font-bold border ${isBullish ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 border-emerald-300' : 'bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-400 border-rose-300'}">${s.breakout_type}</span></td>
+                    </tr>`;
+                }).join('');
+            }
         }
 
         async function loadData() {
