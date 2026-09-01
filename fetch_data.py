@@ -58,7 +58,7 @@ def fetch_market_data():
                     "ltp": ltp,
                     "pChange": p_change,
                     "oiChange": oi_change,
-                    "volChange": round(abs(oi_change * 12.5), 1),
+                    "volChange": round(abs(oi_change * 10.5), 1),
                     "volume": f"{volume:,}",
                     "raw_vol": volume,
                     "trend": trend
@@ -66,22 +66,21 @@ def fetch_market_data():
     except Exception as e:
         print(f"Error fetching live NSE data: {e}")
 
-    # Fallback simulation if market closed / API block (ensures 25+ stocks)
-    if len(all_stocks) < 20:
+    # Fallback simulation if market closed / API unavailable
+    if len(all_stocks) < 15:
         base_symbols = [
             "RELIANCE", "HDFCBANK", "ICICIBANK", "INFY", "TCS", "SBIN", "AXISBANK", "LT",
             "TATAMOTORS", "BAJFINANCE", "KOTAKBANK", "MARUTI", "TATASTEEL", "SUNPHARMA",
             "BHARTIARTL", "ADANIENT", "NTPC", "TITAN", "ITC", "HINDUNILVR", "ONGC",
-            "POWERGRID", "JSWSTEEL", "COALINDIA", "BAJAJFINSV", "HEROMOTOCO", "EICHERMOT",
-            "BPCL", "GRASIM", "TECHM"
+            "POWERGRID", "JSWSTEEL", "COALINDIA", "BAJAJFINSV"
         ]
         all_stocks = []
         for sym in base_symbols:
             ltp = round(random.uniform(400, 3900), 2)
             p_chg = round(random.uniform(-4.5, 4.5), 2)
             oi_chg = round(random.uniform(-25.0, 35.0), 2)
-            vol = int(random.uniform(500000, 9500000))
-            vol_chg = round(random.uniform(20.0, 450.0), 1)
+            vol = int(random.uniform(600000, 9500000))
+            vol_chg = round(random.uniform(25.0, 420.0), 1)
             all_stocks.append({
                 "symbol": sym,
                 "ltp": ltp,
@@ -93,17 +92,17 @@ def fetch_market_data():
                 "trend": calculate_trend(p_chg, oi_chg)
             })
 
-    # Sorting Logic (Top 20 each)
+    # Sorting Logic (Top 10 each)
     # 1. OI Gainers: Descending (Highest positive OI change on top)
-    oi_gainers = sorted(all_stocks, key=lambda x: x["oiChange"], reverse=True)[:20]
+    oi_gainers = sorted(all_stocks, key=lambda x: x["oiChange"], reverse=True)[:10]
 
-    # 2. OI Losers: Ascending (Most negative OI drop on top: -25%, -20%...)
-    oi_losers = sorted(all_stocks, key=lambda x: x["oiChange"], reverse=False)[:20]
+    # 2. OI Losers: Ascending (Most negative OI drop on top)
+    oi_losers = sorted(all_stocks, key=lambda x: x["oiChange"], reverse=False)[:10]
 
     # 3. Volume Gainers: Descending (Highest volume spike on top)
-    volume_gainers = sorted(all_stocks, key=lambda x: x["volChange"], reverse=True)[:20]
+    volume_gainers = sorted(all_stocks, key=lambda x: x["volChange"], reverse=True)[:10]
 
-    # Proper IST Time
+    # Current IST Time
     ist_now = datetime.now(timezone(timedelta(hours=5, minutes=30)))
     formatted_time = ist_now.strftime("%I:%M:%S %p IST")
 
@@ -117,7 +116,7 @@ def fetch_market_data():
     with open("data.json", "w") as f:
         json.dump(output, f, indent=4)
 
-    print(f"data.json successfully updated with Top 20 records at {formatted_time}")
+    print(f"data.json successfully updated with Top 10 at {formatted_time}")
 
 if __name__ == "__main__":
     fetch_market_data()
