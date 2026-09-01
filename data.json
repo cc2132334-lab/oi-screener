@@ -1,171 +1,609 @@
 {
-    "last_updated": "25:27:35 IST",
+    "last_updated": "01:45:46 AM IST",
     "oi_gainers": [
         {
-            "symbol": "BAJFINANCE",
-            "ltp": 3743.46,
-            "pChange": -0.08,
-            "oiChange": 25.89,
-            "volChange": 46.0,
-            "volume": "7,511,187",
-            "trend": "Short Buildup"
-        },
-        {
-            "symbol": "SUNPHARMA",
-            "ltp": 730.75,
-            "pChange": 0.89,
-            "oiChange": 25.19,
-            "volChange": 346.2,
-            "volume": "1,480,484",
+            "symbol": "MARUTI",
+            "ltp": 12950.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "304,641",
+            "raw_vol": 304641,
             "trend": "Long Buildup"
         },
         {
-            "symbol": "KOTAKBANK",
-            "ltp": 3525.17,
-            "pChange": -1.29,
-            "oiChange": 21.32,
-            "volChange": 330.1,
-            "volume": "4,454,551",
-            "trend": "Short Buildup"
-        },
-        {
-            "symbol": "TATAMOTORS",
-            "ltp": 660.78,
-            "pChange": -0.63,
-            "oiChange": 20.86,
-            "volChange": 34.2,
-            "volume": "8,333,096",
-            "trend": "Short Buildup"
-        },
-        {
-            "symbol": "AXISBANK",
-            "ltp": 2425.04,
-            "pChange": 1.66,
-            "oiChange": 20.24,
-            "volChange": 40.6,
-            "volume": "2,546,016",
+            "symbol": "NIFTYFPI",
+            "ltp": 1562.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "19",
+            "raw_vol": 19,
             "trend": "Long Buildup"
         },
         {
-            "symbol": "BHARTIARTL",
-            "ltp": 3508.46,
-            "pChange": 0.82,
-            "oiChange": 20.06,
-            "volChange": 64.6,
-            "volume": "4,032,141",
+            "symbol": "FINNIFTY",
+            "ltp": 26003.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "16,426",
+            "raw_vol": 16426,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "ATHERENERG",
+            "ltp": 1725.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "68,322",
+            "raw_vol": 68322,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "NIFTY",
+            "ltp": 24055.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "377,797,825",
+            "raw_vol": 377797825,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "BAJAJ-AUTO",
+            "ltp": 12361.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "168,554",
+            "raw_vol": 168554,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "MAHABANK",
+            "ltp": 82.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "4,317",
+            "raw_vol": 4317,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "POLYCAB",
+            "ltp": 8895.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "53,831",
+            "raw_vol": 53831,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "KEI",
+            "ltp": 5348.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "33,979",
+            "raw_vol": 33979,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "UNOMINDA",
+            "ltp": 1274.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "18,118",
+            "raw_vol": 18118,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "ADANIENSOL",
+            "ltp": 1382.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "63,870",
+            "raw_vol": 63870,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "ADANIENT",
+            "ltp": 2863.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "119,438",
+            "raw_vol": 119438,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "KALYANKJIL",
+            "ltp": 573.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "83,723",
+            "raw_vol": 83723,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "ASHOKLEY",
+            "ltp": 170.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "51,319",
+            "raw_vol": 51319,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "RADICO",
+            "ltp": 4474.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "10,764",
+            "raw_vol": 10764,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "MUTHOOTFIN",
+            "ltp": 2905.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "40,279",
+            "raw_vol": 40279,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "M&M",
+            "ltp": 3259.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "96,100",
+            "raw_vol": 96100,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "MIDCPNIFTY",
+            "ltp": 14813.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "99,250",
+            "raw_vol": 99250,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "INDIGO",
+            "ltp": 5052.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "64,865",
+            "raw_vol": 64865,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "LTF",
+            "ltp": 309.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "17,484",
+            "raw_vol": 17484,
             "trend": "Long Buildup"
         }
     ],
     "oi_losers": [
         {
-            "symbol": "SBIN",
-            "ltp": 2879.38,
-            "pChange": 0.58,
-            "oiChange": -17.99,
-            "volChange": 269.5,
-            "volume": "2,695,824",
-            "trend": "Short Covering"
-        },
-        {
-            "symbol": "TCS",
-            "ltp": 1205.08,
-            "pChange": 1.02,
-            "oiChange": -14.02,
-            "volChange": 72.2,
-            "volume": "3,145,831",
-            "trend": "Short Covering"
-        },
-        {
-            "symbol": "TATASTEEL",
-            "ltp": 1713.06,
-            "pChange": -2.8,
-            "oiChange": -4.69,
-            "volChange": 265.2,
-            "volume": "2,567,810",
-            "trend": "Long Unwinding"
-        },
-        {
-            "symbol": "INFY",
-            "ltp": 2495.63,
-            "pChange": -1.19,
-            "oiChange": -0.11,
-            "volChange": 266.1,
-            "volume": "4,374,642",
-            "trend": "Long Unwinding"
-        },
-        {
-            "symbol": "HDFCBANK",
-            "ltp": 1675.79,
-            "pChange": -0.33,
-            "oiChange": 2.26,
-            "volChange": 230.5,
-            "volume": "6,612,648",
-            "trend": "Short Buildup"
-        },
-        {
             "symbol": "MARUTI",
-            "ltp": 3038.77,
-            "pChange": -2.4,
-            "oiChange": 2.36,
-            "volChange": 79.0,
-            "volume": "862,299",
-            "trend": "Short Buildup"
+            "ltp": 12950.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "304,641",
+            "raw_vol": 304641,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "NIFTYFPI",
+            "ltp": 1562.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "19",
+            "raw_vol": 19,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "FINNIFTY",
+            "ltp": 26003.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "16,426",
+            "raw_vol": 16426,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "ATHERENERG",
+            "ltp": 1725.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "68,322",
+            "raw_vol": 68322,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "NIFTY",
+            "ltp": 24055.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "377,797,825",
+            "raw_vol": 377797825,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "BAJAJ-AUTO",
+            "ltp": 12361.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "168,554",
+            "raw_vol": 168554,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "MAHABANK",
+            "ltp": 82.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "4,317",
+            "raw_vol": 4317,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "POLYCAB",
+            "ltp": 8895.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "53,831",
+            "raw_vol": 53831,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "KEI",
+            "ltp": 5348.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "33,979",
+            "raw_vol": 33979,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "UNOMINDA",
+            "ltp": 1274.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "18,118",
+            "raw_vol": 18118,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "ADANIENSOL",
+            "ltp": 1382.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "63,870",
+            "raw_vol": 63870,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "ADANIENT",
+            "ltp": 2863.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "119,438",
+            "raw_vol": 119438,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "KALYANKJIL",
+            "ltp": 573.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "83,723",
+            "raw_vol": 83723,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "ASHOKLEY",
+            "ltp": 170.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "51,319",
+            "raw_vol": 51319,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "RADICO",
+            "ltp": 4474.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "10,764",
+            "raw_vol": 10764,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "MUTHOOTFIN",
+            "ltp": 2905.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "40,279",
+            "raw_vol": 40279,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "M&M",
+            "ltp": 3259.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "96,100",
+            "raw_vol": 96100,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "MIDCPNIFTY",
+            "ltp": 14813.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "99,250",
+            "raw_vol": 99250,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "INDIGO",
+            "ltp": 5052.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "64,865",
+            "raw_vol": 64865,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "LTF",
+            "ltp": 309.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "17,484",
+            "raw_vol": 17484,
+            "trend": "Long Buildup"
         }
     ],
     "volume_gainers": [
         {
-            "symbol": "SUNPHARMA",
-            "ltp": 730.75,
-            "pChange": 0.89,
-            "oiChange": 25.19,
-            "volChange": 346.2,
-            "volume": "1,480,484",
+            "symbol": "MARUTI",
+            "ltp": 12950.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "304,641",
+            "raw_vol": 304641,
             "trend": "Long Buildup"
         },
         {
-            "symbol": "KOTAKBANK",
-            "ltp": 3525.17,
-            "pChange": -1.29,
-            "oiChange": 21.32,
-            "volChange": 330.1,
-            "volume": "4,454,551",
-            "trend": "Short Buildup"
+            "symbol": "NIFTYFPI",
+            "ltp": 1562.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "19",
+            "raw_vol": 19,
+            "trend": "Long Buildup"
         },
         {
-            "symbol": "SBIN",
-            "ltp": 2879.38,
-            "pChange": 0.58,
-            "oiChange": -17.99,
-            "volChange": 269.5,
-            "volume": "2,695,824",
-            "trend": "Short Covering"
+            "symbol": "FINNIFTY",
+            "ltp": 26003.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "16,426",
+            "raw_vol": 16426,
+            "trend": "Long Buildup"
         },
         {
-            "symbol": "INFY",
-            "ltp": 2495.63,
-            "pChange": -1.19,
-            "oiChange": -0.11,
-            "volChange": 266.1,
-            "volume": "4,374,642",
-            "trend": "Long Unwinding"
+            "symbol": "ATHERENERG",
+            "ltp": 1725.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "68,322",
+            "raw_vol": 68322,
+            "trend": "Long Buildup"
         },
         {
-            "symbol": "TATASTEEL",
-            "ltp": 1713.06,
-            "pChange": -2.8,
-            "oiChange": -4.69,
-            "volChange": 265.2,
-            "volume": "2,567,810",
-            "trend": "Long Unwinding"
+            "symbol": "NIFTY",
+            "ltp": 24055.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "377,797,825",
+            "raw_vol": 377797825,
+            "trend": "Long Buildup"
         },
         {
-            "symbol": "HDFCBANK",
-            "ltp": 1675.79,
-            "pChange": -0.33,
-            "oiChange": 2.26,
-            "volChange": 230.5,
-            "volume": "6,612,648",
-            "trend": "Short Buildup"
+            "symbol": "BAJAJ-AUTO",
+            "ltp": 12361.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "168,554",
+            "raw_vol": 168554,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "MAHABANK",
+            "ltp": 82.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "4,317",
+            "raw_vol": 4317,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "POLYCAB",
+            "ltp": 8895.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "53,831",
+            "raw_vol": 53831,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "KEI",
+            "ltp": 5348.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "33,979",
+            "raw_vol": 33979,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "UNOMINDA",
+            "ltp": 1274.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "18,118",
+            "raw_vol": 18118,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "ADANIENSOL",
+            "ltp": 1382.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "63,870",
+            "raw_vol": 63870,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "ADANIENT",
+            "ltp": 2863.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "119,438",
+            "raw_vol": 119438,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "KALYANKJIL",
+            "ltp": 573.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "83,723",
+            "raw_vol": 83723,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "ASHOKLEY",
+            "ltp": 170.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "51,319",
+            "raw_vol": 51319,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "RADICO",
+            "ltp": 4474.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "10,764",
+            "raw_vol": 10764,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "MUTHOOTFIN",
+            "ltp": 2905.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "40,279",
+            "raw_vol": 40279,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "M&M",
+            "ltp": 3259.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "96,100",
+            "raw_vol": 96100,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "MIDCPNIFTY",
+            "ltp": 14813.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "99,250",
+            "raw_vol": 99250,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "INDIGO",
+            "ltp": 5052.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "64,865",
+            "raw_vol": 64865,
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "LTF",
+            "ltp": 309.0,
+            "pChange": 0.0,
+            "oiChange": 0.0,
+            "volChange": 0.0,
+            "volume": "17,484",
+            "raw_vol": 17484,
+            "trend": "Long Buildup"
         }
     ]
 }
