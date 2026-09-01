@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Market Screener & 5M Breakout</title>
+    <title>Live Market Screener & 9:25 AM Snapshot</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -14,6 +14,8 @@
         .strategy-view.active { display: block; animation: fadeIn 0.2s ease-in-out; }
         .sub-content { display: none; }
         .sub-content.active { display: block; }
+        .snap-content { display: none; }
+        .snap-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -27,7 +29,7 @@
                 <h1 class="text-xl sm:text-2xl font-black bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 dark:from-emerald-400 dark:to-cyan-400 bg-clip-text text-transparent flex items-center gap-2">
                     <i class="fa-solid fa-chart-line text-emerald-600 dark:text-emerald-400"></i> Market Screener
                 </h1>
-                <p class="text-[11px] text-slate-500 dark:text-slate-400">Live F&O, Cash & 5M Volume Breakouts</p>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400">Live OI, 9:25 AM Snapshot & 5M Volume Breakouts</p>
             </div>
             
             <div class="flex items-center gap-2">
@@ -60,21 +62,24 @@
             </button>
         </div>
 
-        <!-- Strategy Tabs Navigation (Primary Switcher) -->
-        <div class="grid grid-cols-2 gap-2 p-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl mb-4 shadow-sm">
-            <button onclick="switchStrategy('strategy-oi')" id="strat-oi-btn" class="py-2.5 px-3 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/40 shadow-sm transition-all">
+        <!-- Strategy Tabs Navigation (3 Modes) -->
+        <div class="grid grid-cols-3 gap-1.5 p-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl mb-4 shadow-sm">
+            <button onclick="switchStrategy('strategy-oi', this)" id="strat-oi-btn" class="strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/40 shadow-sm transition-all">
                 <i class="fa-solid fa-chart-pie"></i>
-                <span>OI & Volume Pulse</span>
+                <span>Live OI Pulse</span>
             </button>
-            <button onclick="switchStrategy('strategy-breakout')" id="strat-breakout-btn" class="py-2.5 px-3 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-transparent transition-all">
+            <button onclick="switchStrategy('strategy-925', this)" id="strat-925-btn" class="strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-transparent transition-all">
+                <i class="fa-solid fa-clock text-blue-500"></i>
+                <span>9:25 AM Snapshot</span>
+            </button>
+            <button onclick="switchStrategy('strategy-breakout', this)" id="strat-breakout-btn" class="strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-transparent transition-all">
                 <i class="fa-solid fa-bolt text-amber-500"></i>
-                <span>5M 5x Volume Breakout</span>
+                <span>5M 5x Volume</span>
             </button>
         </div>
 
-        <!-- ================= VIEW 1: OI & VOLUME SCREENER (Existing 3-Tab System) ================= -->
+        <!-- ================= VIEW 1: LIVE OI & VOLUME SCREENER ================= -->
         <div id="strategy-oi" class="strategy-view active">
-            <!-- 3 Sub-Tabs Bar -->
             <div class="grid grid-cols-3 gap-1.5 p-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl mb-4 shadow-sm">
                 <button onclick="selectSubTab('tab-gainer', this, 'emerald')" id="subtab-1" class="sub-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/40 shadow-sm">
                     <i class="fa-solid fa-arrow-trend-up"></i>
@@ -90,7 +95,7 @@
                 </button>
             </div>
 
-            <!-- Table 1: Gainers View -->
+            <!-- Gainer Table -->
             <section id="tab-gainer" class="sub-content active bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-md">
                 <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-200 dark:border-slate-800 text-xs">
                     <div id="gainerHeading" class="font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
@@ -117,7 +122,7 @@
                 </div>
             </section>
 
-            <!-- Table 2: Losers View -->
+            <!-- Loser Table -->
             <section id="tab-loser" class="sub-content bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-md">
                 <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-200 dark:border-slate-800 text-xs">
                     <div id="loserHeading" class="font-bold text-rose-700 dark:text-rose-400 flex items-center gap-1.5">
@@ -144,7 +149,7 @@
                 </div>
             </section>
 
-            <!-- Table 3: Volume View -->
+            <!-- Volume Table -->
             <section id="tab-volume" class="sub-content bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-md">
                 <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-200 dark:border-slate-800 text-xs">
                     <div id="volumeHeading" class="font-bold text-teal-700 dark:text-cyan-400 flex items-center gap-1.5">
@@ -172,7 +177,82 @@
             </section>
         </div>
 
-        <!-- ================= VIEW 2: 5-MIN OPENING 5x VOLUME BREAKOUT SCREENER ================= -->
+        <!-- ================= VIEW 2: 9:25 AM OPENING SNAPSHOT (NEW TAB) ================= -->
+        <div id="strategy-925" class="strategy-view">
+            <!-- 9:25 Sub-tabs -->
+            <div class="grid grid-cols-2 gap-2 p-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl mb-4 shadow-sm">
+                <button onclick="selectSnapSubTab('snap-gainer-view', this, 'emerald')" id="snap-sub-1" class="snap-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/40 shadow-sm">
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+                    <span>9:25 AM OI Gainers</span>
+                </button>
+                <button onclick="selectSnapSubTab('snap-loser-view', this, 'rose')" id="snap-sub-2" class="snap-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-transparent">
+                    <i class="fa-solid fa-arrow-trend-down"></i>
+                    <span>9:25 AM OI Losers</span>
+                </button>
+            </div>
+
+            <!-- 9:25 OI Gainers Table -->
+            <section id="snap-gainer-view" class="snap-content active bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-md">
+                <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-200 dark:border-slate-800 text-xs">
+                    <div class="font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-lock"></i> Frozen Snapshot @ 09:25 AM (Top OI Gainers)
+                    </div>
+                    <span class="text-[10px] bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-400 font-semibold px-2 py-0.5 rounded border border-blue-300 dark:border-blue-800">
+                        Opening Momentum
+                    </span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs sm:text-sm whitespace-nowrap">
+                        <thead>
+                            <tr class="text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 text-[11px] uppercase">
+                                <th class="py-2.5 px-2">#</th>
+                                <th class="py-2.5 px-2">Symbol</th>
+                                <th class="py-2.5 px-2">9:25 Price</th>
+                                <th class="py-2.5 px-2">Live LTP</th>
+                                <th class="py-2.5 px-2">9:25 OI % &darr;</th>
+                                <th class="py-2.5 px-2">Live OI %</th>
+                                <th class="py-2.5 px-2 text-right">Trend</th>
+                            </tr>
+                        </thead>
+                        <tbody id="snapGainerBody" class="divide-y divide-slate-100 dark:divide-slate-800/60">
+                            <tr><td colspan="7" class="text-center py-6 text-slate-400">Loading 9:25 AM snapshot data...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 9:25 OI Losers Table -->
+            <section id="snap-loser-view" class="snap-content bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-md">
+                <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-200 dark:border-slate-800 text-xs">
+                    <div class="font-bold text-rose-700 dark:text-rose-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-lock"></i> Frozen Snapshot @ 09:25 AM (Top OI Losers)
+                    </div>
+                    <span class="text-[10px] bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-400 font-semibold px-2 py-0.5 rounded border border-rose-300 dark:border-rose-800">
+                        Opening Unwinding
+                    </span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs sm:text-sm whitespace-nowrap">
+                        <thead>
+                            <tr class="text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 text-[11px] uppercase">
+                                <th class="py-2.5 px-2">#</th>
+                                <th class="py-2.5 px-2">Symbol</th>
+                                <th class="py-2.5 px-2">9:25 Price</th>
+                                <th class="py-2.5 px-2">Live LTP</th>
+                                <th class="py-2.5 px-2">9:25 OI % &uarr;</th>
+                                <th class="py-2.5 px-2">Live OI %</th>
+                                <th class="py-2.5 px-2 text-right">Trend</th>
+                            </tr>
+                        </thead>
+                        <tbody id="snapLoserBody" class="divide-y divide-slate-100 dark:divide-slate-800/60">
+                            <tr><td colspan="7" class="text-center py-6 text-slate-400">Loading 9:25 AM snapshot data...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <!-- ================= VIEW 3: 5-MIN OPENING BREAKOUT ================= -->
         <div id="strategy-breakout" class="strategy-view">
             <section class="bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-md">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-slate-800 gap-2">
@@ -215,7 +295,6 @@
         let currentStrategy = 'strategy-oi';
         let rawMarketData = null;
 
-        // Theme Init
         function initTheme() {
             const saved = localStorage.getItem('theme') || 'light';
             if (saved === 'dark') {
@@ -236,25 +315,24 @@
         }
         initTheme();
 
-        // Strategy Switcher
-        function switchStrategy(stratId) {
+        function switchStrategy(stratId, element) {
             currentStrategy = stratId;
             document.querySelectorAll('.strategy-view').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.strat-btn').forEach(btn => {
+                btn.className = "strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-transparent transition-all";
+            });
+
             document.getElementById(stratId).classList.add('active');
 
-            const oiBtn = document.getElementById('strat-oi-btn');
-            const boBtn = document.getElementById('strat-breakout-btn');
-
             if (stratId === 'strategy-oi') {
-                oiBtn.className = "py-2.5 px-3 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/40 shadow-sm transition-all";
-                boBtn.className = "py-2.5 px-3 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-transparent transition-all";
+                element.className = "strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/40 shadow-sm transition-all";
+            } else if (stratId === 'strategy-925') {
+                element.className = "strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-blue-50 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400 border border-blue-300 dark:border-blue-500/40 shadow-sm transition-all";
             } else {
-                boBtn.className = "py-2.5 px-3 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 bg-amber-50 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-500/40 shadow-sm transition-all";
-                oiBtn.className = "py-2.5 px-3 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-transparent transition-all";
+                element.className = "strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-amber-50 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-500/40 shadow-sm transition-all";
             }
         }
 
-        // Segment Switcher (F&O vs Cash)
         function switchSegment(seg) {
             currentSegment = seg;
             const fnoBtn = document.getElementById('seg-fno');
@@ -299,7 +377,6 @@
             renderTables();
         }
 
-        // Sub-Tab Switcher
         function selectSubTab(tabId, element, color) {
             document.querySelectorAll('.sub-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.sub-btn').forEach(btn => {
@@ -317,6 +394,21 @@
             }
         }
 
+        function selectSnapSubTab(tabId, element, color) {
+            document.querySelectorAll('.snap-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.snap-btn').forEach(btn => {
+                btn.className = "snap-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-transparent transition-all";
+            });
+
+            document.getElementById(tabId).classList.add('active');
+
+            if (color === 'emerald') {
+                element.className = "snap-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/40 shadow-sm";
+            } else {
+                element.className = "snap-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-rose-50 dark:bg-rose-500/20 text-rose-700 dark:text-rose-400 border border-rose-300 dark:border-rose-500/40 shadow-sm";
+            }
+        }
+
         function getBadge(trend) {
             const styles = {
                 "Long Buildup": "bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800",
@@ -327,14 +419,13 @@
             return `<span class="px-2 py-0.5 rounded text-[11px] font-bold border ${styles[trend] || 'bg-slate-200 text-slate-800'}">${trend}</span>`;
         }
 
-        // Render Data
         function renderTables() {
             if (!rawMarketData) return;
 
             document.getElementById('lastUpdated').innerText = rawMarketData.last_updated;
             const data = currentSegment === 'fno' ? (rawMarketData.fno || rawMarketData) : (rawMarketData.cash || rawMarketData);
 
-            // 1. OI Strategy Rendering
+            // 1. Live OI Strategy
             if (currentSegment === 'fno') {
                 document.getElementById('gainerBody').innerHTML = (data.oi_gainers || []).slice(0, 10).map((s, idx) => `
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
@@ -399,12 +490,44 @@
                 </tr>
             `).join('');
 
-            // 2. Strategy 2: 5-Min 5x Volume Breakout Rendering
+            // 2. 9:25 AM Snapshot Rendering
+            const snap = rawMarketData.snapshot_925 || {};
+            const snapGainers = snap.oi_gainers || [];
+            const snapLosers = snap.oi_losers || [];
+
+            document.getElementById('snapGainerBody').innerHTML = snapGainers.length === 0 
+                ? `<tr><td colspan="7" class="text-center py-6 text-slate-400">Waiting for 9:25 AM market snapshot...</td></tr>`
+                : snapGainers.map((s, idx) => `
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                        <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${idx + 1}</td>
+                        <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${s.symbol}</td>
+                        <td class="py-2.5 px-2 font-mono text-slate-600 dark:text-slate-300">₹${s.snap_ltp}</td>
+                        <td class="py-2.5 px-2 font-bold ${s.current_ltp >= s.snap_ltp ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">₹${s.current_ltp}</td>
+                        <td class="py-2.5 px-2 font-bold text-emerald-600 dark:text-emerald-400">+${s.snap_oi}%</td>
+                        <td class="py-2.5 px-2 font-bold ${s.current_oi >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">${s.current_oi >= 0 ? '+' : ''}${s.current_oi}%</td>
+                        <td class="py-2.5 px-2 text-right">${getBadge(s.trend)}</td>
+                    </tr>
+                `).join('');
+
+            document.getElementById('snapLoserBody').innerHTML = snapLosers.length === 0 
+                ? `<tr><td colspan="7" class="text-center py-6 text-slate-400">Waiting for 9:25 AM market snapshot...</td></tr>`
+                : snapLosers.map((s, idx) => `
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                        <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${idx + 1}</td>
+                        <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${s.symbol}</td>
+                        <td class="py-2.5 px-2 font-mono text-slate-600 dark:text-slate-300">₹${s.snap_ltp}</td>
+                        <td class="py-2.5 px-2 font-bold ${s.current_ltp <= s.snap_ltp ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'}">₹${s.current_ltp}</td>
+                        <td class="py-2.5 px-2 font-bold text-rose-600 dark:text-rose-400">${s.snap_oi}%</td>
+                        <td class="py-2.5 px-2 font-bold ${s.current_oi >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">${s.current_oi >= 0 ? '+' : ''}${s.current_oi}%</td>
+                        <td class="py-2.5 px-2 text-right">${getBadge(s.trend)}</td>
+                    </tr>
+                `).join('');
+
+            // 3. 5M Breakout Strategy Rendering
             const breakouts = data.breakouts_5m || [];
-            if (breakouts.length === 0) {
-                document.getElementById('breakoutBody').innerHTML = `<tr><td colspan="7" class="text-center py-6 text-slate-400">No stock matched 5x Volume + PDH/PDL breakout condition today.</td></tr>`;
-            } else {
-                document.getElementById('breakoutBody').innerHTML = breakouts.map((s, idx) => {
+            document.getElementById('breakoutBody').innerHTML = breakouts.length === 0 
+                ? `<tr><td colspan="7" class="text-center py-6 text-slate-400">No stocks matching 5x Volume + Breakout.</td></tr>`
+                : breakouts.map((s, idx) => {
                     const isBullish = s.breakout_type.includes('Bullish');
                     const badgeClass = isBullish 
                         ? "bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800"
@@ -427,7 +550,6 @@
                     </tr>
                     `;
                 }).join('');
-            }
         }
 
         async function loadData() {
