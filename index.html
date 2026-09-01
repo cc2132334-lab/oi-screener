@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Market Screener - Synchronized F&O & Cash</title>
+    <title>Live Market Screener & Algo Bot</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -23,7 +23,7 @@
 
     <div class="max-w-4xl mx-auto">
         
-        <!-- Header -->
+        <!-- 1. Header -->
         <header class="flex justify-between items-center pb-3 mb-3 border-b border-slate-300 dark:border-slate-800">
             <div>
                 <h1 class="text-xl sm:text-2xl font-black bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 dark:from-emerald-400 dark:to-cyan-400 bg-clip-text text-transparent flex items-center gap-2">
@@ -52,7 +52,7 @@
             </div>
         </header>
 
-        <!-- Segment Selector (F&O vs Cash) -->
+        <!-- 2. Segment Selector (F&O vs Cash) -->
         <div class="flex p-1 bg-slate-200 dark:bg-slate-900 rounded-xl mb-3 border border-slate-300 dark:border-slate-800">
             <button onclick="switchSegment('fno')" id="seg-fno" class="flex-1 py-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all bg-white dark:bg-slate-800 text-emerald-700 dark:text-emerald-400 shadow-sm">
                 <i class="fa-solid fa-layer-group"></i> F&O Segment
@@ -62,7 +62,53 @@
             </button>
         </div>
 
-        <!-- Strategy Tabs Navigation (3 Modes) -->
+        <!-- 3. ALGO BOT CONTROLLER CARD (Start / Stop Action Bar) -->
+        <div class="bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-3 sm:p-4 mb-4 shadow-md transition-all">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                
+                <!-- Bot Title & Status Indicator -->
+                <div class="flex items-center gap-3">
+                    <div id="botIconContainer" class="h-10 w-10 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-lg shadow-sm">
+                        <i id="botIcon" class="fa-solid fa-robot"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-extrabold text-sm sm:text-base text-slate-800 dark:text-slate-100">Algo Execution Engine</span>
+                            <span id="botStatusBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full border bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800 flex items-center gap-1">
+                                <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span> RUNNING
+                            </span>
+                        </div>
+                        <p id="botStatusText" class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Monitoring 5M Breakouts & Real-time OI Spikes</p>
+                    </div>
+                </div>
+
+                <!-- Action Buttons (Start / Stop) -->
+                <div class="flex items-center gap-2 self-stretch sm:self-auto">
+                    <button onclick="startBot()" id="btnStartBot" class="flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-1.5 active:scale-95">
+                        <i class="fa-solid fa-play text-xs"></i>
+                        <span>Start Bot</span>
+                    </button>
+                    <button onclick="stopBot()" id="btnStopBot" class="flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-rose-600 hover:text-white dark:hover:bg-rose-600 dark:hover:text-white shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-95">
+                        <i class="fa-solid fa-stop text-xs"></i>
+                        <span>Stop Bot</span>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Bot Live Activity Strip -->
+            <div class="mt-3 pt-2.5 border-t border-slate-200 dark:border-slate-800/80 flex flex-wrap items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 gap-2">
+                <div class="flex items-center gap-3">
+                    <span class="flex items-center gap-1"><i class="fa-solid fa-crosshairs text-teal-500"></i> Mode: <b id="botActiveSegment" class="text-slate-700 dark:text-slate-300">F&O Auto-Scan</b></span>
+                    <span class="flex items-center gap-1"><i class="fa-solid fa-scale-balanced text-indigo-500"></i> Setup: <b>1st 5M (5x Vol) + OI</b></span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-amber-600 dark:text-amber-400 font-semibold"><i class="fa-solid fa-bolt"></i> Auto-Triggers: Active</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Strategy Tabs Navigation (3 Modes) -->
         <div class="grid grid-cols-3 gap-1.5 p-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl mb-4 shadow-sm">
             <button onclick="switchStrategy('strategy-live', this)" id="strat-live-btn" class="strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/40 shadow-sm transition-all">
                 <i class="fa-solid fa-chart-pie"></i>
@@ -164,7 +210,7 @@
                                 <th class="py-2.5 px-2">#</th>
                                 <th class="py-2.5 px-2">Symbol</th>
                                 <th class="py-2.5 px-2">LTP</th>
-                                <th class="py-2.5 px-2">Vol Spike &darr;</th>
+                                <th id="th-vol-metric" class="py-2.5 px-2">Vol Spike &darr;</th>
                                 <th class="py-2.5 px-2">Price %</th>
                                 <th class="py-2.5 px-2 text-right">Total Volume</th>
                             </tr>
@@ -177,7 +223,7 @@
             </section>
         </div>
 
-        <!-- ================= VIEW 2: 9:25 AM OPENING SNAPSHOT (SYNCHRONIZED) ================= -->
+        <!-- ================= VIEW 2: 9:25 AM OPENING SNAPSHOT ================= -->
         <div id="strategy-925" class="strategy-view">
             <div class="grid grid-cols-2 gap-2 p-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl mb-4 shadow-sm">
                 <button onclick="selectSnapSubTab('snap-gainer-view', this, 'emerald')" id="snap-sub-1" class="snap-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/40 shadow-sm">
@@ -251,7 +297,7 @@
             </section>
         </div>
 
-        <!-- ================= VIEW 3: 5-MIN OPENING BREAKOUT (SYNCHRONIZED) ================= -->
+        <!-- ================= VIEW 3: 5-MIN OPENING BREAKOUT ================= -->
         <div id="strategy-breakout" class="strategy-view">
             <section class="bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-md">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-slate-800 gap-2">
@@ -292,8 +338,10 @@
     <script>
         let currentSegment = 'fno';
         let currentStrategy = 'strategy-live';
+        let isBotRunning = true;
         let rawMarketData = null;
 
+        // Theme Handling
         function initTheme() {
             const saved = localStorage.getItem('theme') || 'light';
             if (saved === 'dark') {
@@ -314,6 +362,53 @@
         }
         initTheme();
 
+        // Bot Controller Functions
+        function initBotState() {
+            const savedState = localStorage.getItem('algo_bot_state');
+            isBotRunning = (savedState !== 'stopped');
+            updateBotUI();
+        }
+
+        function startBot() {
+            isBotRunning = true;
+            localStorage.setItem('algo_bot_state', 'running');
+            updateBotUI();
+        }
+
+        function stopBot() {
+            isBotRunning = false;
+            localStorage.setItem('algo_bot_state', 'stopped');
+            updateBotUI();
+        }
+
+        function updateBotUI() {
+            const badge = document.getElementById('botStatusBadge');
+            const desc = document.getElementById('botStatusText');
+            const iconBox = document.getElementById('botIconContainer');
+            const btnStart = document.getElementById('btnStartBot');
+            const btnStop = document.getElementById('btnStopBot');
+
+            if (isBotRunning) {
+                badge.className = "text-[10px] font-bold px-2 py-0.5 rounded-full border bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800 flex items-center gap-1";
+                badge.innerHTML = `<span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span> RUNNING`;
+                desc.innerText = "Monitoring 5M Breakouts & Real-time OI Spikes";
+                iconBox.className = "h-10 w-10 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-lg shadow-sm";
+
+                btnStart.className = "flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 text-white shadow-md flex items-center justify-center gap-1.5 opacity-100 cursor-default";
+                btnStop.className = "flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-rose-600 hover:text-white dark:hover:bg-rose-600 dark:hover:text-white shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-95";
+            } else {
+                badge.className = "text-[10px] font-bold px-2 py-0.5 rounded-full border bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-400 border-rose-300 dark:border-rose-800 flex items-center gap-1";
+                badge.innerHTML = `<span class="h-1.5 w-1.5 rounded-full bg-rose-500"></span> PAUSED`;
+                desc.innerText = "Algo Bot is stopped. Real-time automatic triggers paused.";
+                iconBox.className = "h-10 w-10 rounded-xl bg-rose-100 dark:bg-rose-950/80 border border-rose-300 dark:border-rose-800 text-rose-600 dark:text-rose-400 flex items-center justify-center text-lg shadow-sm";
+
+                btnStart.className = "flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-emerald-600 hover:text-white dark:hover:bg-emerald-600 dark:hover:text-white shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-95";
+                btnStop.className = "flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-rose-600 text-white shadow-md flex items-center justify-center gap-1.5 opacity-100 cursor-default";
+            }
+        }
+        initBotState();
+
+        // Strategy Switcher
         function switchStrategy(stratId, element) {
             currentStrategy = stratId;
             document.querySelectorAll('.strategy-view').forEach(el => el.classList.remove('active'));
@@ -332,6 +427,7 @@
             }
         }
 
+        // Segment Switcher (F&O vs Cash)
         function switchSegment(seg) {
             currentSegment = seg;
             const fnoBtn = document.getElementById('seg-fno');
@@ -341,8 +437,8 @@
                 fnoBtn.className = "flex-1 py-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all bg-white dark:bg-slate-800 text-emerald-700 dark:text-emerald-400 shadow-sm";
                 cashBtn.className = "flex-1 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-all text-slate-600 dark:text-slate-400";
                 document.getElementById('subHeaderDesc').innerText = "F&O Segment: Live OI Pulse, 9:25 Snapshot & 5M Breakout";
+                document.getElementById('botActiveSegment').innerText = "F&O Auto-Scan";
 
-                // Tab 1 Updates
                 document.getElementById('label-subtab-1').innerText = "OI Gainers (10)";
                 document.getElementById('label-subtab-2').innerText = "OI Losers (10)";
                 document.getElementById('label-subtab-3').innerText = "F&O Volume (10)";
@@ -355,7 +451,6 @@
                 document.getElementById('th-loser-metric').innerHTML = "OI Chg % &uarr;";
                 document.getElementById('th-loser-extra').innerText = "Trend";
 
-                // Tab 2 Updates (9:25 Snapshot)
                 document.getElementById('label-snap-1').innerText = "9:25 AM OI Gainers";
                 document.getElementById('label-snap-2').innerText = "9:25 AM OI Losers";
                 document.getElementById('snapGainerHeading').innerHTML = `<i class="fa-solid fa-lock"></i> Frozen Snapshot @ 09:25 AM (Top F&O OI Gainers)`;
@@ -365,7 +460,6 @@
                 document.getElementById('th-snap-lose-1').innerHTML = "9:25 OI % &uarr;";
                 document.getElementById('th-snap-lose-2').innerHTML = "Live OI %";
 
-                // Tab 3 Updates (5M Breakout)
                 document.getElementById('breakoutTitle').innerHTML = `<i class="fa-solid fa-bolt"></i> 1st 5-Min Opening Breakout (F&O Stocks)`;
                 document.getElementById('breakoutBadge').innerText = "F&O Setups";
 
@@ -373,8 +467,8 @@
                 cashBtn.className = "flex-1 py-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all bg-white dark:bg-slate-800 text-cyan-700 dark:text-cyan-400 shadow-sm";
                 fnoBtn.className = "flex-1 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-all text-slate-600 dark:text-slate-400";
                 document.getElementById('subHeaderDesc').innerText = "Cash (Equity) Segment: Live Price Pulse, 9:25 Snapshot & 5M Breakout";
+                document.getElementById('botActiveSegment').innerText = "Cash Auto-Scan";
 
-                // Tab 1 Updates
                 document.getElementById('label-subtab-1').innerText = "Price Gainers (10)";
                 document.getElementById('label-subtab-2').innerText = "Price Losers (10)";
                 document.getElementById('label-subtab-3').innerText = "Cash Volume (10)";
@@ -387,7 +481,6 @@
                 document.getElementById('th-loser-metric').innerHTML = "Price Chg % &uarr;";
                 document.getElementById('th-loser-extra').innerText = "Day Low";
 
-                // Tab 2 Updates (9:25 Snapshot)
                 document.getElementById('label-snap-1').innerText = "9:25 AM Price Gainers";
                 document.getElementById('label-snap-2').innerText = "9:25 AM Price Losers";
                 document.getElementById('snapGainerHeading').innerHTML = `<i class="fa-solid fa-lock"></i> Frozen Snapshot @ 09:25 AM (Top Cash Price Gainers)`;
@@ -397,7 +490,6 @@
                 document.getElementById('th-snap-lose-1').innerHTML = "9:25 Price % &uarr;";
                 document.getElementById('th-snap-lose-2').innerHTML = "Live Price %";
 
-                // Tab 3 Updates (5M Breakout)
                 document.getElementById('breakoutTitle').innerHTML = `<i class="fa-solid fa-bolt"></i> 1st 5-Min Opening Breakout (Cash Momentum Stocks)`;
                 document.getElementById('breakoutBadge').innerText = "Cash Setups";
             }
@@ -519,7 +611,7 @@
                 </tr>
             `).join('');
 
-            // 2. 9:25 AM SNAPSHOT TAB (Segment-specific)
+            // 2. 9:25 AM SNAPSHOT TAB
             const snap = data.snapshot_925 || {};
             const snapGainers = snap.gainers || [];
             const snapLosers = snap.losers || [];
@@ -552,7 +644,7 @@
                     </tr>
                 `).join('');
 
-            // 3. 5M BREAKOUT TAB (Segment-specific)
+            // 3. 5M BREAKOUT TAB
             const breakouts = data.breakouts_5m || [];
             document.getElementById('breakoutBody').innerHTML = breakouts.length === 0 
                 ? `<tr><td colspan="7" class="text-center py-6 text-slate-400">No stocks matching 5x Volume Breakout in this segment today.</td></tr>`
