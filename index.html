@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Market Screener & Algo Bot</title>
+    <title>Live Market Screener & Algo Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -23,22 +23,19 @@
 
     <div class="max-w-4xl mx-auto">
         
-        <!-- 1. Header -->
+        <!-- Header -->
         <header class="flex justify-between items-center pb-3 mb-3 border-b border-slate-300 dark:border-slate-800">
             <div>
                 <h1 class="text-xl sm:text-2xl font-black bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 dark:from-emerald-400 dark:to-cyan-400 bg-clip-text text-transparent flex items-center gap-2">
                     <i class="fa-solid fa-chart-line text-emerald-600 dark:text-emerald-400"></i> Market Screener
                 </h1>
-                <p id="subHeaderDesc" class="text-[11px] text-slate-500 dark:text-slate-400">F&O Segment: Live OI Pulse, 9:25 Snapshot & 5M Breakout</p>
+                <p id="subHeaderDesc" class="text-[11px] text-slate-500 dark:text-slate-400">Live Analytics & Rule-based Algo Execution</p>
             </div>
             
             <div class="flex items-center gap-2">
-                <!-- Theme Switch -->
                 <button onclick="toggleTheme()" id="themeBtn" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-slate-700 dark:text-amber-400 shadow-sm">
                     <i id="themeIcon" class="fa-solid fa-moon text-sm"></i>
                 </button>
-
-                <!-- Update Badge -->
                 <div class="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 px-3 py-1.5 rounded-xl shadow-sm">
                     <span class="relative flex h-2.5 w-2.5">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
@@ -52,7 +49,7 @@
             </div>
         </header>
 
-        <!-- 2. Segment Selector (F&O vs Cash) -->
+        <!-- Segment Selector -->
         <div class="flex p-1 bg-slate-200 dark:bg-slate-900 rounded-xl mb-3 border border-slate-300 dark:border-slate-800">
             <button onclick="switchSegment('fno')" id="seg-fno" class="flex-1 py-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all bg-white dark:bg-slate-800 text-emerald-700 dark:text-emerald-400 shadow-sm">
                 <i class="fa-solid fa-layer-group"></i> F&O Segment
@@ -62,11 +59,10 @@
             </button>
         </div>
 
-        <!-- 3. ALGO BOT CONTROLLER CARD (Start / Stop Action Bar) -->
+        <!-- ALGO BOT CONTROLLER & CONFIGURATION CARD -->
         <div class="bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-3 sm:p-4 mb-4 shadow-md transition-all">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                
-                <!-- Bot Title & Status Indicator -->
+            
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
                 <div class="flex items-center gap-3">
                     <div id="botIconContainer" class="h-10 w-10 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-lg shadow-sm">
                         <i id="botIcon" class="fa-solid fa-robot"></i>
@@ -78,76 +74,171 @@
                                 <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span> RUNNING
                             </span>
                         </div>
-                        <p id="botStatusText" class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Monitoring 5M Breakouts & Real-time OI Spikes</p>
+                        <p id="botStatusText" class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Monitoring C1/C2 Entry, Max % Move & Exit Rules</p>
                     </div>
                 </div>
 
-                <!-- Action Buttons (Start / Stop) -->
                 <div class="flex items-center gap-2 self-stretch sm:self-auto">
-                    <button onclick="startBot()" id="btnStartBot" class="flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-1.5 active:scale-95">
-                        <i class="fa-solid fa-play text-xs"></i>
-                        <span>Start Bot</span>
+                    <button onclick="startBot()" id="btnStartBot" class="flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md transition-all flex items-center justify-center gap-1.5 active:scale-95">
+                        <i class="fa-solid fa-play text-xs"></i> <span>Start Bot</span>
                     </button>
-                    <button onclick="stopBot()" id="btnStopBot" class="flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-rose-600 hover:text-white dark:hover:bg-rose-600 dark:hover:text-white shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-95">
-                        <i class="fa-solid fa-stop text-xs"></i>
-                        <span>Stop Bot</span>
+                    <button onclick="stopBot()" id="btnStopBot" class="flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-rose-600 hover:text-white shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-95">
+                        <i class="fa-solid fa-stop text-xs"></i> <span>Stop Bot</span>
                     </button>
+                </div>
+            </div>
+
+            <!-- 4 Configuration Controls Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 mt-3">
+                
+                <!-- 1. Strategy Mode -->
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-1">
+                        <i class="fa-solid fa-layer-group text-emerald-600 mr-1"></i> Strategy Mode:
+                    </label>
+                    <select id="algoStrategySelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-2.5 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm">
+                        <option value="combined">🚀 Combine Mode</option>
+                        <option value="strat1">⚡ Strat 1 (5M 5x Vol)</option>
+                        <option value="strat2">⏰ Strat 2 (9:25 Top 5)</option>
+                    </select>
+                </div>
+
+                <!-- 2. Max % Move Filter (1% to 10%) -->
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-1">
+                        <i class="fa-solid fa-filter text-rose-500 mr-1"></i> Max C1 Move Cap:
+                    </label>
+                    <select id="algoMaxMoveSelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-2.5 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-rose-500 shadow-sm">
+                        <option value="0.5">Max 0.5% Move</option>
+                        <option value="1.0">Max 1.0% Move</option>
+                        <option value="1.5">Max 1.5% Move</option>
+                        <option value="2.0" selected>Max 2.0% Move</option>
+                        <option value="2.5">Max 2.5% Move</option>
+                        <option value="3.0">Max 3.0% Move</option>
+                        <option value="4.0">Max 4.0% Move</option>
+                        <option value="5.0">Max 5.0% Move</option>
+                        <option value="6.0">Max 6.0% Move</option>
+                        <option value="7.0">Max 7.0% Move</option>
+                        <option value="8.0">Max 8.0% Move</option>
+                        <option value="9.0">Max 9.0% Move</option>
+                        <option value="10.0">Max 10.0% Move</option>
+                    </select>
+                </div>
+
+                <!-- 3. Target Level (1:1 to 1:10) -->
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-1">
+                        <i class="fa-solid fa-bullseye text-indigo-600 mr-1"></i> Target Level:
+                    </label>
+                    <select id="algoTargetSelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-2.5 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm">
+                        <option value="1">Target 1:1</option>
+                        <option value="2">Target 1:2</option>
+                        <option value="3" selected>Target 1:3</option>
+                        <option value="4">Target 1:4</option>
+                        <option value="5">Target 1:5</option>
+                        <option value="6">Target 1:6</option>
+                        <option value="7">Target 1:7</option>
+                        <option value="8">Target 1:8</option>
+                        <option value="9">Target 1:9</option>
+                        <option value="10">Target 1:10</option>
+                    </select>
+                </div>
+
+                <!-- 4. Exit Management (Half vs Full) -->
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-1">
+                        <i class="fa-solid fa-scale-balanced text-amber-600 mr-1"></i> Exit Mode:
+                    </label>
+                    <select id="algoExitModeSelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-2.5 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-sm">
+                        <option value="half" selected>⚖️ Half Book (Trail Rest)</option>
+                        <option value="full">🎯 Full 100% Exit</option>
+                    </select>
                 </div>
 
             </div>
 
-            <!-- Bot Live Activity Strip -->
-            <div class="mt-3 pt-2.5 border-t border-slate-200 dark:border-slate-800/80 flex flex-wrap items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 gap-2">
-                <div class="flex items-center gap-3">
-                    <span class="flex items-center gap-1"><i class="fa-solid fa-crosshairs text-teal-500"></i> Mode: <b id="botActiveSegment" class="text-slate-700 dark:text-slate-300">F&O Auto-Scan</b></span>
-                    <span class="flex items-center gap-1"><i class="fa-solid fa-scale-balanced text-indigo-500"></i> Setup: <b>1st 5M (5x Vol) + OI</b></span>
-                </div>
+            <!-- Dynamic Trailing & Filter Rule Banner -->
+            <div id="trailingRuleBanner" class="mt-3 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-[11px] text-slate-600 dark:text-slate-300 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
                 <div class="flex items-center gap-2">
-                    <span class="text-amber-600 dark:text-amber-400 font-semibold"><i class="fa-solid fa-bolt"></i> Auto-Triggers: Active</span>
+                    <span class="h-2 w-2 rounded-full bg-indigo-500"></span>
+                    <span id="trailingRuleText"><b>Active Filter:</b> C1 Move &le; 2.0% | Book 50% at Target 1:3, Trail SL to 1:1.</span>
+                </div>
+                <span id="filterStatusTag" class="self-start sm:self-auto font-mono text-[10px] bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-400 px-2 py-0.5 rounded border border-rose-300 font-bold">Max Move &le; 2.0%</span>
+            </div>
+
+            <!-- Active Signals Table -->
+            <div class="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800">
+                <div class="flex items-center justify-between pb-2 mb-2 text-xs">
+                    <span class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                        <i class="fa-solid fa-list-check text-emerald-600 dark:text-emerald-400"></i> Qualified Algo Signals (Within Selected Max % Cap)
+                    </span>
+                    <span id="algoActiveCountBadge" class="text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 font-bold px-2 py-0.5 rounded border border-emerald-300">
+                        0 Signals Active
+                    </span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs whitespace-nowrap">
+                        <thead>
+                            <tr class="text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 text-[10px] uppercase">
+                                <th class="py-2 px-1.5">Symbol</th>
+                                <th class="py-2 px-1.5">Type</th>
+                                <th class="py-2 px-1.5">Move %</th>
+                                <th class="py-2 px-1.5">Entry Price</th>
+                                <th class="py-2 px-1.5">Initial SL</th>
+                                <th id="th-algo-target" class="py-2 px-1.5">Selected Target</th>
+                                <th class="py-2 px-1.5">Exit Mode</th>
+                                <th class="py-2 px-1.5 text-right">Algo Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="algoSignalsBody" class="divide-y divide-slate-100 dark:divide-slate-800/60">
+                            <tr><td colspan="8" class="text-center py-4 text-slate-400">Scanning for qualified breakout stocks...</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
+
         </div>
 
-        <!-- 4. Strategy Tabs Navigation (3 Modes) -->
+        <!-- Strategy Tabs Navigation -->
         <div class="grid grid-cols-3 gap-1.5 p-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl mb-4 shadow-sm">
-            <button onclick="switchStrategy('strategy-live', this)" id="strat-live-btn" class="strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/40 shadow-sm transition-all">
+            <button onclick="switchStrategy('strategy-live', this)" id="strat-live-btn" class="strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 shadow-sm transition-all">
                 <i class="fa-solid fa-chart-pie"></i>
                 <span id="label-strat-1">Live Pulse</span>
             </button>
-            <button onclick="switchStrategy('strategy-925', this)" id="strat-925-btn" class="strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-transparent transition-all">
+            <button onclick="switchStrategy('strategy-925', this)" id="strat-925-btn" class="strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 border border-transparent transition-all">
                 <i class="fa-solid fa-clock text-blue-500"></i>
                 <span>9:25 Snapshot</span>
             </button>
-            <button onclick="switchStrategy('strategy-breakout', this)" id="strat-breakout-btn" class="strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-transparent transition-all">
+            <button onclick="switchStrategy('strategy-breakout', this)" id="strat-breakout-btn" class="strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 border border-transparent transition-all">
                 <i class="fa-solid fa-bolt text-amber-500"></i>
                 <span>5M 5x Volume</span>
             </button>
         </div>
 
-        <!-- ================= VIEW 1: LIVE PULSE SCREENER ================= -->
+        <!-- VIEW 1: LIVE PULSE -->
         <div id="strategy-live" class="strategy-view active">
             <div class="grid grid-cols-3 gap-1.5 p-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl mb-4 shadow-sm">
-                <button onclick="selectSubTab('tab-gainer', this, 'emerald')" id="subtab-1" class="sub-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/40 shadow-sm">
+                <button onclick="selectSubTab('tab-gainer', this, 'emerald')" id="subtab-1" class="sub-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 shadow-sm">
                     <i class="fa-solid fa-arrow-trend-up"></i>
                     <span id="label-subtab-1">OI Gainers (10)</span>
                 </button>
-                <button onclick="selectSubTab('tab-loser', this, 'rose')" id="subtab-2" class="sub-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-transparent">
+                <button onclick="selectSubTab('tab-loser', this, 'rose')" id="subtab-2" class="sub-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 border border-transparent">
                     <i class="fa-solid fa-arrow-trend-down"></i>
                     <span id="label-subtab-2">OI Losers (10)</span>
                 </button>
-                <button onclick="selectSubTab('tab-volume', this, 'cyan')" id="subtab-3" class="sub-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-transparent">
+                <button onclick="selectSubTab('tab-volume', this, 'cyan')" id="subtab-3" class="sub-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 border border-transparent">
                     <i class="fa-solid fa-bolt"></i>
                     <span id="label-subtab-3">Volume (10)</span>
                 </button>
             </div>
 
-            <!-- Gainer Table -->
             <section id="tab-gainer" class="sub-content active bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-md">
                 <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-200 dark:border-slate-800 text-xs">
                     <div id="gainerHeading" class="font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
                         <i class="fa-solid fa-arrow-up-wide-short"></i> Top 10 OI Gainers (High &rarr; Low)
                     </div>
-                    <span id="gainerBadge" class="text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 font-semibold px-2 py-0.5 rounded border border-emerald-300 dark:border-emerald-800">Fresh Positions</span>
+                    <span id="gainerBadge" class="text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 font-semibold px-2 py-0.5 rounded border border-emerald-300">Fresh Positions</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs sm:text-sm whitespace-nowrap">
@@ -168,13 +259,12 @@
                 </div>
             </section>
 
-            <!-- Loser Table -->
             <section id="tab-loser" class="sub-content bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-md">
                 <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-200 dark:border-slate-800 text-xs">
                     <div id="loserHeading" class="font-bold text-rose-700 dark:text-rose-400 flex items-center gap-1.5">
                         <i class="fa-solid fa-arrow-down-short-wide"></i> Top 10 OI Losers (High Exit &rarr; Low)
                     </div>
-                    <span id="loserBadge" class="text-[10px] bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-400 font-semibold px-2 py-0.5 rounded border border-rose-300 dark:border-rose-800">Unwinding</span>
+                    <span id="loserBadge" class="text-[10px] bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-400 font-semibold px-2 py-0.5 rounded border border-rose-300">Unwinding</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs sm:text-sm whitespace-nowrap">
@@ -195,13 +285,12 @@
                 </div>
             </section>
 
-            <!-- Volume Table -->
             <section id="tab-volume" class="sub-content bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-md">
                 <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-200 dark:border-slate-800 text-xs">
                     <div id="volumeHeading" class="font-bold text-teal-700 dark:text-cyan-400 flex items-center gap-1.5">
                         <i class="fa-solid fa-arrow-up-wide-short"></i> Top 10 Volume Shockers (High &rarr; Low)
                     </div>
-                    <span class="text-[10px] bg-teal-100 dark:bg-cyan-950 text-teal-800 dark:text-cyan-400 font-semibold px-2 py-0.5 rounded border border-teal-300 dark:border-cyan-800">Spike Activity</span>
+                    <span class="text-[10px] bg-teal-100 dark:bg-cyan-950 text-teal-800 dark:text-cyan-400 font-semibold px-2 py-0.5 rounded border border-teal-300">Spike Activity</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs sm:text-sm whitespace-nowrap">
@@ -210,7 +299,7 @@
                                 <th class="py-2.5 px-2">#</th>
                                 <th class="py-2.5 px-2">Symbol</th>
                                 <th class="py-2.5 px-2">LTP</th>
-                                <th id="th-vol-metric" class="py-2.5 px-2">Vol Spike &darr;</th>
+                                <th class="py-2.5 px-2">Vol Spike &darr;</th>
                                 <th class="py-2.5 px-2">Price %</th>
                                 <th class="py-2.5 px-2 text-right">Total Volume</th>
                             </tr>
@@ -223,28 +312,25 @@
             </section>
         </div>
 
-        <!-- ================= VIEW 2: 9:25 AM OPENING SNAPSHOT ================= -->
+        <!-- VIEW 2: 9:25 SNAPSHOT -->
         <div id="strategy-925" class="strategy-view">
             <div class="grid grid-cols-2 gap-2 p-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl mb-4 shadow-sm">
-                <button onclick="selectSnapSubTab('snap-gainer-view', this, 'emerald')" id="snap-sub-1" class="snap-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/40 shadow-sm">
+                <button onclick="selectSnapSubTab('snap-gainer-view', this, 'emerald')" id="snap-sub-1" class="snap-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 shadow-sm">
                     <i class="fa-solid fa-arrow-trend-up"></i>
                     <span id="label-snap-1">9:25 AM OI Gainers</span>
                 </button>
-                <button onclick="selectSnapSubTab('snap-loser-view', this, 'rose')" id="snap-sub-2" class="snap-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-transparent">
+                <button onclick="selectSnapSubTab('snap-loser-view', this, 'rose')" id="snap-sub-2" class="snap-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 border border-transparent">
                     <i class="fa-solid fa-arrow-trend-down"></i>
                     <span id="label-snap-2">9:25 AM OI Losers</span>
                 </button>
             </div>
 
-            <!-- 9:25 Snapshot Gainers Table -->
             <section id="snap-gainer-view" class="snap-content active bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-md">
                 <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-200 dark:border-slate-800 text-xs">
                     <div id="snapGainerHeading" class="font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
                         <i class="fa-solid fa-lock"></i> Frozen Snapshot @ 09:25 AM (Top OI Gainers)
                     </div>
-                    <span class="text-[10px] bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-400 font-semibold px-2 py-0.5 rounded border border-blue-300 dark:border-blue-800">
-                        Opening Momentum
-                    </span>
+                    <span class="text-[10px] bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-400 font-semibold px-2 py-0.5 rounded border border-blue-300">Opening Momentum</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs sm:text-sm whitespace-nowrap">
@@ -260,21 +346,18 @@
                             </tr>
                         </thead>
                         <tbody id="snapGainerBody" class="divide-y divide-slate-100 dark:divide-slate-800/60">
-                            <tr><td colspan="7" class="text-center py-6 text-slate-400">Loading 9:25 AM snapshot...</td></tr>
+                            <tr><td colspan="7" class="text-center py-6 text-slate-400">Loading snapshot...</td></tr>
                         </tbody>
                     </table>
                 </div>
             </section>
 
-            <!-- 9:25 Snapshot Losers Table -->
             <section id="snap-loser-view" class="snap-content bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-md">
                 <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-200 dark:border-slate-800 text-xs">
                     <div id="snapLoserHeading" class="font-bold text-rose-700 dark:text-rose-400 flex items-center gap-1.5">
                         <i class="fa-solid fa-lock"></i> Frozen Snapshot @ 09:25 AM (Top OI Losers)
                     </div>
-                    <span class="text-[10px] bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-400 font-semibold px-2 py-0.5 rounded border border-rose-300 dark:border-rose-800">
-                        Opening Exit
-                    </span>
+                    <span class="text-[10px] bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-400 font-semibold px-2 py-0.5 rounded border border-rose-300">Opening Exit</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs sm:text-sm whitespace-nowrap">
@@ -290,14 +373,14 @@
                             </tr>
                         </thead>
                         <tbody id="snapLoserBody" class="divide-y divide-slate-100 dark:divide-slate-800/60">
-                            <tr><td colspan="7" class="text-center py-6 text-slate-400">Loading 9:25 AM snapshot...</td></tr>
+                            <tr><td colspan="7" class="text-center py-6 text-slate-400">Loading snapshot...</td></tr>
                         </tbody>
                     </table>
                 </div>
             </section>
         </div>
 
-        <!-- ================= VIEW 3: 5-MIN OPENING BREAKOUT ================= -->
+        <!-- VIEW 3: 5M BREAKOUT -->
         <div id="strategy-breakout" class="strategy-view">
             <section class="bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-md">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-slate-800 gap-2">
@@ -307,9 +390,7 @@
                         </div>
                         <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Filter: 1st 5M Volume &ge; 5x (20 MA Volume) + Closed above PDH / below PDL</p>
                     </div>
-                    <span id="breakoutBadge" class="text-[10px] bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-400 font-semibold px-2.5 py-1 rounded-lg border border-amber-300 dark:border-amber-800 self-start sm:self-auto">
-                        F&O Setups
-                    </span>
+                    <span id="breakoutBadge" class="text-[10px] bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-400 font-semibold px-2.5 py-1 rounded-lg border border-amber-300">F&O Setups</span>
                 </div>
 
                 <div class="overflow-x-auto">
@@ -341,7 +422,6 @@
         let isBotRunning = true;
         let rawMarketData = null;
 
-        // Theme Handling
         function initTheme() {
             const saved = localStorage.getItem('theme') || 'light';
             if (saved === 'dark') {
@@ -356,13 +436,10 @@
         function toggleTheme() {
             const isDark = document.documentElement.classList.toggle('dark');
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            document.getElementById('themeIcon').className = isDark 
-                ? "fa-solid fa-sun text-sm text-amber-400" 
-                : "fa-solid fa-moon text-sm text-slate-700";
+            document.getElementById('themeIcon').className = isDark ? "fa-solid fa-sun text-sm text-amber-400" : "fa-solid fa-moon text-sm text-slate-700";
         }
         initTheme();
 
-        // Bot Controller Functions
         function initBotState() {
             const savedState = localStorage.getItem('algo_bot_state');
             isBotRunning = (savedState !== 'stopped');
@@ -373,12 +450,14 @@
             isBotRunning = true;
             localStorage.setItem('algo_bot_state', 'running');
             updateBotUI();
+            renderTables();
         }
 
         function stopBot() {
             isBotRunning = false;
             localStorage.setItem('algo_bot_state', 'stopped');
             updateBotUI();
+            renderTables();
         }
 
         function updateBotUI() {
@@ -389,45 +468,52 @@
             const btnStop = document.getElementById('btnStopBot');
 
             if (isBotRunning) {
-                badge.className = "text-[10px] font-bold px-2 py-0.5 rounded-full border bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800 flex items-center gap-1";
+                badge.className = "text-[10px] font-bold px-2 py-0.5 rounded-full border bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border-emerald-300 flex items-center gap-1";
                 badge.innerHTML = `<span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span> RUNNING`;
-                desc.innerText = "Monitoring 5M Breakouts & Real-time OI Spikes";
-                iconBox.className = "h-10 w-10 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-lg shadow-sm";
-
+                desc.innerText = "Monitoring C1/C2 Entry, Max % Move & Exit Rules";
+                iconBox.className = "h-10 w-10 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 text-emerald-600 flex items-center justify-center text-lg shadow-sm";
                 btnStart.className = "flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 text-white shadow-md flex items-center justify-center gap-1.5 opacity-100 cursor-default";
-                btnStop.className = "flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-rose-600 hover:text-white dark:hover:bg-rose-600 dark:hover:text-white shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-95";
+                btnStop.className = "flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-rose-600 hover:text-white shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-95";
             } else {
-                badge.className = "text-[10px] font-bold px-2 py-0.5 rounded-full border bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-400 border-rose-300 dark:border-rose-800 flex items-center gap-1";
+                badge.className = "text-[10px] font-bold px-2 py-0.5 rounded-full border bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-400 border-rose-300 flex items-center gap-1";
                 badge.innerHTML = `<span class="h-1.5 w-1.5 rounded-full bg-rose-500"></span> PAUSED`;
-                desc.innerText = "Algo Bot is stopped. Real-time automatic triggers paused.";
-                iconBox.className = "h-10 w-10 rounded-xl bg-rose-100 dark:bg-rose-950/80 border border-rose-300 dark:border-rose-800 text-rose-600 dark:text-rose-400 flex items-center justify-center text-lg shadow-sm";
-
-                btnStart.className = "flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-emerald-600 hover:text-white dark:hover:bg-emerald-600 dark:hover:text-white shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-95";
+                desc.innerText = "Algo Bot is stopped. Execution paused.";
+                iconBox.className = "h-10 w-10 rounded-xl bg-rose-100 dark:bg-rose-950/80 border border-rose-300 text-rose-600 flex items-center justify-center text-lg shadow-sm";
+                btnStart.className = "flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-emerald-600 hover:text-white shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-95";
                 btnStop.className = "flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-rose-600 text-white shadow-md flex items-center justify-center gap-1.5 opacity-100 cursor-default";
             }
         }
         initBotState();
 
-        // Strategy Switcher
+        function onAlgoConfigChange() {
+            const targetVal = parseInt(document.getElementById('algoTargetSelect').value);
+            const exitMode = document.getElementById('algoExitModeSelect').value;
+            const maxMove = parseFloat(document.getElementById('algoMaxMoveSelect').value);
+            const bannerText = document.getElementById('trailingRuleText');
+            const statusTag = document.getElementById('filterStatusTag');
+
+            statusTag.innerText = `Max Move \u2264 ${maxMove}%`;
+
+            if (exitMode === 'full') {
+                bannerText.innerHTML = `<b>Active Filter:</b> C1 Move &le; ${maxMove}% | 100% Full exit when Target 1:${targetVal} is hit.`;
+            } else {
+                bannerText.innerHTML = `<b>Active Filter:</b> C1 Move &le; ${maxMove}% | Book 50% at Target 1:${targetVal}, Trail SL.`;
+            }
+
+            document.getElementById('th-algo-target').innerText = `Target (1:${targetVal})`;
+            renderTables();
+        }
+
         function switchStrategy(stratId, element) {
             currentStrategy = stratId;
             document.querySelectorAll('.strategy-view').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.strat-btn').forEach(btn => {
-                btn.className = "strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-transparent transition-all";
+                btn.className = "strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 border border-transparent transition-all";
             });
-
             document.getElementById(stratId).classList.add('active');
-
-            if (stratId === 'strategy-live') {
-                element.className = "strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/40 shadow-sm transition-all";
-            } else if (stratId === 'strategy-925') {
-                element.className = "strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-blue-50 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400 border border-blue-300 dark:border-blue-500/40 shadow-sm transition-all";
-            } else {
-                element.className = "strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-amber-50 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-500/40 shadow-sm transition-all";
-            }
+            element.className = "strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 shadow-sm transition-all";
         }
 
-        // Segment Switcher (F&O vs Cash)
         function switchSegment(seg) {
             currentSegment = seg;
             const fnoBtn = document.getElementById('seg-fno');
@@ -436,107 +522,41 @@
             if (seg === 'fno') {
                 fnoBtn.className = "flex-1 py-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all bg-white dark:bg-slate-800 text-emerald-700 dark:text-emerald-400 shadow-sm";
                 cashBtn.className = "flex-1 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-all text-slate-600 dark:text-slate-400";
-                document.getElementById('subHeaderDesc').innerText = "F&O Segment: Live OI Pulse, 9:25 Snapshot & 5M Breakout";
-                document.getElementById('botActiveSegment').innerText = "F&O Auto-Scan";
-
-                document.getElementById('label-subtab-1').innerText = "OI Gainers (10)";
-                document.getElementById('label-subtab-2').innerText = "OI Losers (10)";
-                document.getElementById('label-subtab-3').innerText = "F&O Volume (10)";
-                document.getElementById('gainerHeading').innerHTML = `<i class="fa-solid fa-arrow-up-wide-short"></i> Top 10 OI Gainers (High &rarr; Low)`;
-                document.getElementById('gainerBadge').innerText = "Fresh Positions";
-                document.getElementById('th-gainer-metric').innerHTML = "OI Chg % &darr;";
-                document.getElementById('th-gainer-extra').innerText = "Trend";
-                document.getElementById('loserHeading').innerHTML = `<i class="fa-solid fa-arrow-down-short-wide"></i> Top 10 OI Losers (High Exit &rarr; Low)`;
-                document.getElementById('loserBadge').innerText = "Unwinding";
-                document.getElementById('th-loser-metric').innerHTML = "OI Chg % &uarr;";
-                document.getElementById('th-loser-extra').innerText = "Trend";
-
-                document.getElementById('label-snap-1').innerText = "9:25 AM OI Gainers";
-                document.getElementById('label-snap-2').innerText = "9:25 AM OI Losers";
-                document.getElementById('snapGainerHeading').innerHTML = `<i class="fa-solid fa-lock"></i> Frozen Snapshot @ 09:25 AM (Top F&O OI Gainers)`;
-                document.getElementById('snapLoserHeading').innerHTML = `<i class="fa-solid fa-lock"></i> Frozen Snapshot @ 09:25 AM (Top F&O OI Losers)`;
-                document.getElementById('th-snap-gain-1').innerHTML = "9:25 OI % &darr;";
-                document.getElementById('th-snap-gain-2').innerHTML = "Live OI %";
-                document.getElementById('th-snap-lose-1').innerHTML = "9:25 OI % &uarr;";
-                document.getElementById('th-snap-lose-2').innerHTML = "Live OI %";
-
-                document.getElementById('breakoutTitle').innerHTML = `<i class="fa-solid fa-bolt"></i> 1st 5-Min Opening Breakout (F&O Stocks)`;
-                document.getElementById('breakoutBadge').innerText = "F&O Setups";
-
+                document.getElementById('subHeaderDesc').innerText = "F&O Segment: Live OI Pulse, 9:25 Snapshot & Algo Execution";
             } else {
                 cashBtn.className = "flex-1 py-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all bg-white dark:bg-slate-800 text-cyan-700 dark:text-cyan-400 shadow-sm";
                 fnoBtn.className = "flex-1 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-all text-slate-600 dark:text-slate-400";
-                document.getElementById('subHeaderDesc').innerText = "Cash (Equity) Segment: Live Price Pulse, 9:25 Snapshot & 5M Breakout";
-                document.getElementById('botActiveSegment').innerText = "Cash Auto-Scan";
-
-                document.getElementById('label-subtab-1').innerText = "Price Gainers (10)";
-                document.getElementById('label-subtab-2').innerText = "Price Losers (10)";
-                document.getElementById('label-subtab-3').innerText = "Cash Volume (10)";
-                document.getElementById('gainerHeading').innerHTML = `<i class="fa-solid fa-arrow-up-wide-short"></i> Top 10 Cash Gainers (High &rarr; Low)`;
-                document.getElementById('gainerBadge').innerText = "Bullish Cash";
-                document.getElementById('th-gainer-metric').innerHTML = "Price Chg % &darr;";
-                document.getElementById('th-gainer-extra').innerText = "Day High";
-                document.getElementById('loserHeading').innerHTML = `<i class="fa-solid fa-arrow-down-short-wide"></i> Top 10 Cash Losers (Big Drop &rarr; Low)`;
-                document.getElementById('loserBadge').innerText = "Bearish Cash";
-                document.getElementById('th-loser-metric').innerHTML = "Price Chg % &uarr;";
-                document.getElementById('th-loser-extra').innerText = "Day Low";
-
-                document.getElementById('label-snap-1').innerText = "9:25 AM Price Gainers";
-                document.getElementById('label-snap-2').innerText = "9:25 AM Price Losers";
-                document.getElementById('snapGainerHeading').innerHTML = `<i class="fa-solid fa-lock"></i> Frozen Snapshot @ 09:25 AM (Top Cash Price Gainers)`;
-                document.getElementById('snapLoserHeading').innerHTML = `<i class="fa-solid fa-lock"></i> Frozen Snapshot @ 09:25 AM (Top Cash Price Losers)`;
-                document.getElementById('th-snap-gain-1').innerHTML = "9:25 Price % &darr;";
-                document.getElementById('th-snap-gain-2').innerHTML = "Live Price %";
-                document.getElementById('th-snap-lose-1').innerHTML = "9:25 Price % &uarr;";
-                document.getElementById('th-snap-lose-2').innerHTML = "Live Price %";
-
-                document.getElementById('breakoutTitle').innerHTML = `<i class="fa-solid fa-bolt"></i> 1st 5-Min Opening Breakout (Cash Momentum Stocks)`;
-                document.getElementById('breakoutBadge').innerText = "Cash Setups";
+                document.getElementById('subHeaderDesc').innerText = "Cash (Equity) Segment: Live Price Pulse, 9:25 Snapshot & Algo Execution";
             }
-
             renderTables();
         }
 
         function selectSubTab(tabId, element, color) {
             document.querySelectorAll('.sub-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.sub-btn').forEach(btn => {
-                btn.className = "sub-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-transparent transition-all";
+                btn.className = "sub-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 border border-transparent transition-all";
             });
-
             document.getElementById(tabId).classList.add('active');
-
-            if (color === 'emerald') {
-                element.className = "sub-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/40 shadow-sm";
-            } else if (color === 'rose') {
-                element.className = "sub-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-rose-50 dark:bg-rose-500/20 text-rose-700 dark:text-rose-400 border border-rose-300 dark:border-rose-500/40 shadow-sm";
-            } else {
-                element.className = "sub-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-teal-50 dark:bg-cyan-500/20 text-teal-700 dark:text-cyan-400 border border-teal-300 dark:border-cyan-500/40 shadow-sm";
-            }
+            element.className = "sub-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 shadow-sm";
         }
 
         function selectSnapSubTab(tabId, element, color) {
             document.querySelectorAll('.snap-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.snap-btn').forEach(btn => {
-                btn.className = "snap-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-transparent transition-all";
+                btn.className = "snap-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 border border-transparent transition-all";
             });
-
             document.getElementById(tabId).classList.add('active');
-
-            if (color === 'emerald') {
-                element.className = "snap-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/40 shadow-sm";
-            } else {
-                element.className = "snap-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-rose-50 dark:bg-rose-500/20 text-rose-700 dark:text-rose-400 border border-rose-300 dark:border-rose-500/40 shadow-sm";
-            }
+            element.className = "snap-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 shadow-sm";
         }
 
         function getBadge(trend) {
             const styles = {
-                "Long Buildup": "bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800",
-                "Short Buildup": "bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-400 border-rose-300 dark:border-rose-800",
-                "Short Covering": "bg-sky-100 dark:bg-sky-950 text-sky-800 dark:text-sky-400 border-sky-300 dark:border-sky-800",
-                "Long Unwinding": "bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-400 border-amber-300 dark:border-amber-800",
-                "Bullish Cash": "bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800",
-                "Bearish Cash": "bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-400 border-rose-300 dark:border-rose-800"
+                "Long Buildup": "bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 border-emerald-300",
+                "Short Buildup": "bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-400 border-rose-300",
+                "Short Covering": "bg-sky-100 dark:bg-sky-950 text-sky-800 dark:text-sky-400 border-sky-300",
+                "Long Unwinding": "bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-400 border-amber-300",
+                "Bullish Cash": "bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 border-emerald-300",
+                "Bearish Cash": "bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-400 border-rose-300"
             };
             return `<span class="px-2 py-0.5 rounded text-[11px] font-bold border ${styles[trend] || 'bg-slate-200 text-slate-800'}">${trend}</span>`;
         }
@@ -547,130 +567,135 @@
             document.getElementById('lastUpdated').innerText = rawMarketData.last_updated;
             const data = rawMarketData[currentSegment] || {};
 
-            // 1. LIVE PULSE TAB
+            const stratSelected = document.getElementById('algoStrategySelect').value;
+            const maxMove = parseFloat(document.getElementById('algoMaxMoveSelect').value);
+            const targetVal = parseInt(document.getElementById('algoTargetSelect').value);
+            const exitMode = document.getElementById('algoExitModeSelect').value;
+            
+            const rawSignals = (data.algo_signals || {})[stratSelected] || [];
+            
+            // PRE-TRADE FILTER: ONLY KEEP STOCKS WITH MOVE <= MAX MOVE %
+            const qualifiedSignals = rawSignals.filter(s => s.abs_move <= maxMove);
+
+            document.getElementById('algoActiveCountBadge').innerText = isBotRunning ? `${qualifiedSignals.length} Qualified Signals` : 'Bot Stopped';
+
+            if (!isBotRunning) {
+                document.getElementById('algoSignalsBody').innerHTML = `<tr><td colspan="8" class="text-center py-5 text-rose-500 font-semibold"><i class="fa-solid fa-pause mr-1"></i> Algo Execution Engine is stopped.</td></tr>`;
+            } else if (qualifiedSignals.length === 0) {
+                document.getElementById('algoSignalsBody').innerHTML = `<tr><td colspan="8" class="text-center py-5 text-amber-600 dark:text-amber-400 font-semibold"><i class="fa-solid fa-filter mr-1"></i> All active stocks exceeded the Max ${maxMove}% Move threshold. Waiting for tighter C1 setups...</td></tr>`;
+            } else {
+                document.getElementById('algoSignalsBody').innerHTML = qualifiedSignals.map(s => {
+                    const isBuy = s.signal === "BUY";
+                    const badgeClass = isBuy ? "bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border-emerald-300" : "bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-400 border-rose-300";
+                    const targetPrice = isBuy ? round2(s.entry + (s.risk * targetVal)) : round2(s.entry - (s.risk * targetVal));
+                    const exitDesc = exitMode === 'full' ? `100% Exit @ 1:${targetVal}` : `50% Book @ 1:${targetVal}`;
+
+                    return `
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                        <td class="py-2 px-1.5 font-bold text-slate-800 dark:text-slate-100">${s.symbol}</td>
+                        <td class="py-2 px-1.5"><span class="px-1.5 py-0.5 rounded text-[10px] font-bold border ${badgeClass}">${s.signal}</span></td>
+                        <td class="py-2 px-1.5 font-bold ${s.pChange >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'} font-mono">${s.pChange >= 0 ? '+' : ''}${s.pChange}%</td>
+                        <td class="py-2 px-1.5 font-mono font-bold text-slate-800 dark:text-slate-200">₹${s.entry}</td>
+                        <td class="py-2 px-1.5 font-mono text-rose-600 dark:text-rose-400">₹${s.sl}</td>
+                        <td class="py-2 px-1.5 font-mono text-indigo-600 dark:text-indigo-400 font-bold">₹${targetPrice}</td>
+                        <td class="py-2 px-1.5 font-semibold text-amber-600 dark:text-amber-400">${exitDesc}</td>
+                        <td class="py-2 px-1.5 text-right"><span class="text-[10px] bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded font-semibold text-slate-700 dark:text-slate-300 border">${s.scenario.includes('Scenario A') ? 'C2 Break' : 'C1 Break'}</span></td>
+                    </tr>`;
+                }).join('');
+            }
+
+            // Standard Tables Rendering
             if (currentSegment === 'fno') {
                 document.getElementById('gainerBody').innerHTML = (data.gainers || []).slice(0, 10).map((s, idx) => `
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
                         <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${idx + 1}</td>
                         <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${s.symbol}</td>
                         <td class="py-2.5 px-2 font-medium">₹${s.ltp}</td>
                         <td class="py-2.5 px-2 font-bold text-emerald-600 dark:text-emerald-400">+${s.oiChange}%</td>
-                        <td class="py-2.5 px-2 font-bold ${s.pChange >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">
-                            ${s.pChange >= 0 ? '+' : ''}${s.pChange}%
-                        </td>
+                        <td class="py-2.5 px-2 font-bold ${s.pChange >= 0 ? 'text-emerald-600' : 'text-rose-600'}">${s.pChange >= 0 ? '+' : ''}${s.pChange}%</td>
                         <td class="py-2.5 px-2 text-right">${getBadge(s.trend)}</td>
-                    </tr>
-                `).join('');
-
+                    </tr>`).join('');
                 document.getElementById('loserBody').innerHTML = (data.losers || []).slice(0, 10).map((s, idx) => `
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
                         <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${idx + 1}</td>
                         <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${s.symbol}</td>
                         <td class="py-2.5 px-2 font-medium">₹${s.ltp}</td>
-                        <td class="py-2.5 px-2 font-bold text-rose-600 dark:text-rose-400">${s.oiChange}%</td>
-                        <td class="py-2.5 px-2 font-bold ${s.pChange >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">
-                            ${s.pChange >= 0 ? '+' : ''}${s.pChange}%
-                        </td>
+                        <td class="py-2.5 px-2 font-bold text-rose-600">${s.oiChange}%</td>
+                        <td class="py-2.5 px-2 font-bold ${s.pChange >= 0 ? 'text-emerald-600' : 'text-rose-600'}">${s.pChange >= 0 ? '+' : ''}${s.pChange}%</td>
                         <td class="py-2.5 px-2 text-right">${getBadge(s.trend)}</td>
-                    </tr>
-                `).join('');
+                    </tr>`).join('');
             } else {
                 document.getElementById('gainerBody').innerHTML = (data.gainers || []).slice(0, 10).map((s, idx) => `
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
                         <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${idx + 1}</td>
                         <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${s.symbol}</td>
                         <td class="py-2.5 px-2 font-medium">₹${s.ltp}</td>
-                        <td class="py-2.5 px-2 font-bold text-emerald-600 dark:text-emerald-400">+${s.pChange}%</td>
-                        <td class="py-2.5 px-2 font-medium text-slate-500 dark:text-slate-400">${s.volume}</td>
-                        <td class="py-2.5 px-2 text-right font-mono text-emerald-600 dark:text-emerald-400 font-semibold">₹${s.dayHigh}</td>
-                    </tr>
-                `).join('');
-
+                        <td class="py-2.5 px-2 font-bold text-emerald-600">+${s.pChange}%</td>
+                        <td class="py-2.5 px-2 text-medium text-slate-500">${s.volume}</td>
+                        <td class="py-2.5 px-2 text-right font-mono text-emerald-600 font-semibold">₹${s.dayHigh}</td>
+                    </tr>`).join('');
                 document.getElementById('loserBody').innerHTML = (data.losers || []).slice(0, 10).map((s, idx) => `
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
                         <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${idx + 1}</td>
                         <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${s.symbol}</td>
                         <td class="py-2.5 px-2 font-medium">₹${s.ltp}</td>
-                        <td class="py-2.5 px-2 font-bold text-rose-600 dark:text-rose-400">${s.pChange}%</td>
-                        <td class="py-2.5 px-2 font-medium text-slate-500 dark:text-slate-400">${s.volume}</td>
-                        <td class="py-2.5 px-2 text-right font-mono text-rose-600 dark:text-rose-400 font-semibold">₹${s.dayLow}</td>
-                    </tr>
-                `).join('');
+                        <td class="py-2.5 px-2 font-bold text-rose-600">${s.pChange}%</td>
+                        <td class="py-2.5 px-2 text-medium text-slate-500">${s.volume}</td>
+                        <td class="py-2.5 px-2 text-right font-mono text-rose-600 font-semibold">₹${s.dayLow}</td>
+                    </tr>`).join('');
             }
 
             document.getElementById('volumeBody').innerHTML = (data.volume_gainers || []).slice(0, 10).map((s, idx) => `
-                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
                     <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${idx + 1}</td>
                     <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${s.symbol}</td>
                     <td class="py-2.5 px-2 font-medium">₹${s.ltp}</td>
-                    <td class="py-2.5 px-2 font-bold text-teal-600 dark:text-cyan-400">+${s.volChange}%</td>
-                    <td class="py-2.5 px-2 font-bold ${s.pChange >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">
-                        ${s.pChange >= 0 ? '+' : ''}${s.pChange}%
-                    </td>
+                    <td class="py-2.5 px-2 font-bold text-teal-600">+${s.volChange}%</td>
+                    <td class="py-2.5 px-2 font-bold ${s.pChange >= 0 ? 'text-emerald-600' : 'text-rose-600'}">${s.pChange >= 0 ? '+' : ''}${s.pChange}%</td>
                     <td class="py-2.5 px-2 text-right text-slate-600 dark:text-slate-400 font-mono text-xs">${s.volume}</td>
-                </tr>
-            `).join('');
+                </tr>`).join('');
 
-            // 2. 9:25 AM SNAPSHOT TAB
             const snap = data.snapshot_925 || {};
-            const snapGainers = snap.gainers || [];
-            const snapLosers = snap.losers || [];
+            document.getElementById('snapGainerBody').innerHTML = (snap.gainers || []).map((s, idx) => `
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                    <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${idx + 1}</td>
+                    <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${s.symbol}</td>
+                    <td class="py-2.5 px-2 font-mono text-slate-600 dark:text-slate-300">₹${s.snap_ltp}</td>
+                    <td class="py-2.5 px-2 font-bold text-emerald-600">₹${s.current_ltp}</td>
+                    <td class="py-2.5 px-2 font-bold text-emerald-600">+${s.snap_metric}%</td>
+                    <td class="py-2.5 px-2 font-bold text-emerald-600">+${s.current_metric}%</td>
+                    <td class="py-2.5 px-2 text-right">${getBadge(s.trend)}</td>
+                </tr>`).join('');
 
-            document.getElementById('snapGainerBody').innerHTML = snapGainers.length === 0 
-                ? `<tr><td colspan="7" class="text-center py-6 text-slate-400">Waiting for 9:25 AM snapshot...</td></tr>`
-                : snapGainers.map((s, idx) => `
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
-                        <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${idx + 1}</td>
-                        <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${s.symbol}</td>
-                        <td class="py-2.5 px-2 font-mono text-slate-600 dark:text-slate-300">₹${s.snap_ltp}</td>
-                        <td class="py-2.5 px-2 font-bold ${s.current_ltp >= s.snap_ltp ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">₹${s.current_ltp}</td>
-                        <td class="py-2.5 px-2 font-bold text-emerald-600 dark:text-emerald-400">+${s.snap_metric}%</td>
-                        <td class="py-2.5 px-2 font-bold ${s.current_metric >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">${s.current_metric >= 0 ? '+' : ''}${s.current_metric}%</td>
-                        <td class="py-2.5 px-2 text-right">${getBadge(s.trend)}</td>
-                    </tr>
-                `).join('');
+            document.getElementById('snapLoserBody').innerHTML = (snap.losers || []).map((s, idx) => `
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                    <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${idx + 1}</td>
+                    <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${s.symbol}</td>
+                    <td class="py-2.5 px-2 font-mono text-slate-600 dark:text-slate-300">₹${s.snap_ltp}</td>
+                    <td class="py-2.5 px-2 font-bold text-rose-600">₹${s.current_ltp}</td>
+                    <td class="py-2.5 px-2 font-bold text-rose-600">${s.snap_metric}%</td>
+                    <td class="py-2.5 px-2 font-bold text-rose-600">${s.current_metric}%</td>
+                    <td class="py-2.5 px-2 text-right">${getBadge(s.trend)}</td>
+                </tr>`).join('');
 
-            document.getElementById('snapLoserBody').innerHTML = snapLosers.length === 0 
-                ? `<tr><td colspan="7" class="text-center py-6 text-slate-400">Waiting for 9:25 AM snapshot...</td></tr>`
-                : snapLosers.map((s, idx) => `
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
-                        <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${idx + 1}</td>
-                        <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${s.symbol}</td>
-                        <td class="py-2.5 px-2 font-mono text-slate-600 dark:text-slate-300">₹${s.snap_ltp}</td>
-                        <td class="py-2.5 px-2 font-bold ${s.current_ltp <= s.snap_ltp ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'}">₹${s.current_ltp}</td>
-                        <td class="py-2.5 px-2 font-bold text-rose-600 dark:text-rose-400">${s.snap_metric}%</td>
-                        <td class="py-2.5 px-2 font-bold ${s.current_metric >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">${s.current_metric >= 0 ? '+' : ''}${s.current_metric}%</td>
-                        <td class="py-2.5 px-2 text-right">${getBadge(s.trend)}</td>
-                    </tr>
-                `).join('');
-
-            // 3. 5M BREAKOUT TAB
             const breakouts = data.breakouts_5m || [];
-            document.getElementById('breakoutBody').innerHTML = breakouts.length === 0 
-                ? `<tr><td colspan="7" class="text-center py-6 text-slate-400">No stocks matching 5x Volume Breakout in this segment today.</td></tr>`
-                : breakouts.map((s, idx) => {
-                    const isBullish = s.breakout_type.includes('Bullish');
-                    const badgeClass = isBullish 
-                        ? "bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800"
-                        : "bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-400 border-rose-300 dark:border-rose-800";
-                    const levelText = isBullish ? `PDH: ₹${s.pdh}` : `PDL: ₹${s.pdl}`;
+            document.getElementById('breakoutBody').innerHTML = breakouts.map((s, idx) => {
+                const isBullish = s.breakout_type.includes('Bullish');
+                return `
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                    <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${idx + 1}</td>
+                    <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${s.symbol}</td>
+                    <td class="py-2.5 px-2 font-medium">₹${s.ltp}</td>
+                    <td class="py-2.5 px-2 font-mono font-bold text-emerald-600">₹${s.first_5m_close}</td>
+                    <td class="py-2.5 px-2 font-mono text-slate-600">${isBullish ? 'PDH: ₹' + s.pdh : 'PDL: ₹' + s.pdl}</td>
+                    <td class="py-2.5 px-2 font-bold text-amber-600 font-mono">${s.vol_ratio}x</td>
+                    <td class="py-2.5 px-2 text-right"><span class="px-2 py-0.5 rounded text-[11px] font-bold border">${s.breakout_type}</span></td>
+                </tr>`;
+            }).join('');
+        }
 
-                    return `
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
-                        <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${idx + 1}</td>
-                        <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${s.symbol}</td>
-                        <td class="py-2.5 px-2 font-medium">₹${s.ltp}</td>
-                        <td class="py-2.5 px-2 font-mono font-bold ${isBullish ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">₹${s.first_5m_close}</td>
-                        <td class="py-2.5 px-2 font-mono text-slate-600 dark:text-slate-300">${levelText}</td>
-                        <td class="py-2.5 px-2 font-bold text-amber-600 dark:text-amber-400 font-mono">${s.vol_ratio}x (${s.first_5m_vol})</td>
-                        <td class="py-2.5 px-2 text-right">
-                            <span class="px-2 py-0.5 rounded text-[11px] font-bold border ${badgeClass}">
-                                <i class="fa-solid ${isBullish ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'} mr-1"></i>${s.breakout_type}
-                            </span>
-                        </td>
-                    </tr>
-                    `;
-                }).join('');
+        function round2(num) {
+            return Math.round(num * 100) / 100;
         }
 
         async function loadData() {
