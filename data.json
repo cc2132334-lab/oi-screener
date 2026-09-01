@@ -1,171 +1,171 @@
 {
-    "last_updated": "25:25:04 IST",
+    "last_updated": "25:27:35 IST",
     "oi_gainers": [
         {
+            "symbol": "BAJFINANCE",
+            "ltp": 3743.46,
+            "pChange": -0.08,
+            "oiChange": 25.89,
+            "volChange": 46.0,
+            "volume": "7,511,187",
+            "trend": "Short Buildup"
+        },
+        {
+            "symbol": "SUNPHARMA",
+            "ltp": 730.75,
+            "pChange": 0.89,
+            "oiChange": 25.19,
+            "volChange": 346.2,
+            "volume": "1,480,484",
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "KOTAKBANK",
+            "ltp": 3525.17,
+            "pChange": -1.29,
+            "oiChange": 21.32,
+            "volChange": 330.1,
+            "volume": "4,454,551",
+            "trend": "Short Buildup"
+        },
+        {
+            "symbol": "TATAMOTORS",
+            "ltp": 660.78,
+            "pChange": -0.63,
+            "oiChange": 20.86,
+            "volChange": 34.2,
+            "volume": "8,333,096",
+            "trend": "Short Buildup"
+        },
+        {
+            "symbol": "AXISBANK",
+            "ltp": 2425.04,
+            "pChange": 1.66,
+            "oiChange": 20.24,
+            "volChange": 40.6,
+            "volume": "2,546,016",
+            "trend": "Long Buildup"
+        },
+        {
             "symbol": "BHARTIARTL",
-            "ltp": 2461.63,
-            "pChange": 2.54,
-            "oiChange": 25.33,
-            "volChange": 21.5,
-            "volume": "3,369,056",
-            "trend": "Long Buildup"
-        },
-        {
-            "symbol": "TCS",
-            "ltp": 2334.61,
-            "pChange": -2.88,
-            "oiChange": 16.61,
-            "volChange": 155.4,
-            "volume": "3,602,798",
-            "trend": "Short Buildup"
-        },
-        {
-            "symbol": "SBIN",
-            "ltp": 2825.41,
-            "pChange": -4.35,
-            "oiChange": 16.16,
-            "volChange": 344.6,
-            "volume": "7,211,172",
-            "trend": "Short Buildup"
-        },
-        {
-            "symbol": "MARUTI",
-            "ltp": 2231.48,
-            "pChange": 3.17,
-            "oiChange": 9.25,
-            "volChange": 50.3,
-            "volume": "6,663,755",
-            "trend": "Long Buildup"
-        },
-        {
-            "symbol": "HDFCBANK",
-            "ltp": 2166.76,
-            "pChange": 2.2,
-            "oiChange": 8.64,
-            "volChange": 222.4,
-            "volume": "1,236,989",
-            "trend": "Long Buildup"
-        },
-        {
-            "symbol": "LT",
-            "ltp": 3017.06,
-            "pChange": 2.31,
-            "oiChange": 4.13,
-            "volChange": 202.3,
-            "volume": "5,522,480",
+            "ltp": 3508.46,
+            "pChange": 0.82,
+            "oiChange": 20.06,
+            "volChange": 64.6,
+            "volume": "4,032,141",
             "trend": "Long Buildup"
         }
     ],
     "oi_losers": [
         {
-            "symbol": "ICICIBANK",
-            "ltp": 1019.69,
-            "pChange": -1.7,
-            "oiChange": -15.39,
-            "volChange": 227.3,
-            "volume": "3,443,596",
-            "trend": "Long Unwinding"
-        },
-        {
-            "symbol": "SUNPHARMA",
-            "ltp": 2470.99,
-            "pChange": -1.68,
-            "oiChange": -12.47,
-            "volChange": 221.0,
-            "volume": "2,069,944",
-            "trend": "Long Unwinding"
-        },
-        {
-            "symbol": "RELIANCE",
-            "ltp": 3767.07,
-            "pChange": 2.2,
-            "oiChange": -7.21,
-            "volChange": 57.1,
-            "volume": "8,689,678",
+            "symbol": "SBIN",
+            "ltp": 2879.38,
+            "pChange": 0.58,
+            "oiChange": -17.99,
+            "volChange": 269.5,
+            "volume": "2,695,824",
             "trend": "Short Covering"
         },
         {
-            "symbol": "TATAMOTORS",
-            "ltp": 963.72,
-            "pChange": -0.78,
-            "oiChange": -5.51,
-            "volChange": 236.3,
-            "volume": "1,377,609",
+            "symbol": "TCS",
+            "ltp": 1205.08,
+            "pChange": 1.02,
+            "oiChange": -14.02,
+            "volChange": 72.2,
+            "volume": "3,145,831",
+            "trend": "Short Covering"
+        },
+        {
+            "symbol": "TATASTEEL",
+            "ltp": 1713.06,
+            "pChange": -2.8,
+            "oiChange": -4.69,
+            "volChange": 265.2,
+            "volume": "2,567,810",
             "trend": "Long Unwinding"
         },
         {
-            "symbol": "AXISBANK",
-            "ltp": 1752.79,
-            "pChange": 0.73,
-            "oiChange": -2.84,
-            "volChange": 295.1,
-            "volume": "8,567,067",
-            "trend": "Short Covering"
+            "symbol": "INFY",
+            "ltp": 2495.63,
+            "pChange": -1.19,
+            "oiChange": -0.11,
+            "volChange": 266.1,
+            "volume": "4,374,642",
+            "trend": "Long Unwinding"
         },
         {
-            "symbol": "KOTAKBANK",
-            "ltp": 3196.78,
-            "pChange": 0.41,
-            "oiChange": -2.8,
-            "volChange": 231.1,
-            "volume": "1,052,913",
-            "trend": "Short Covering"
+            "symbol": "HDFCBANK",
+            "ltp": 1675.79,
+            "pChange": -0.33,
+            "oiChange": 2.26,
+            "volChange": 230.5,
+            "volume": "6,612,648",
+            "trend": "Short Buildup"
+        },
+        {
+            "symbol": "MARUTI",
+            "ltp": 3038.77,
+            "pChange": -2.4,
+            "oiChange": 2.36,
+            "volChange": 79.0,
+            "volume": "862,299",
+            "trend": "Short Buildup"
         }
     ],
     "volume_gainers": [
         {
-            "symbol": "SBIN",
-            "ltp": 2825.41,
-            "pChange": -4.35,
-            "oiChange": 16.16,
-            "volChange": 344.6,
-            "volume": "7,211,172",
+            "symbol": "SUNPHARMA",
+            "ltp": 730.75,
+            "pChange": 0.89,
+            "oiChange": 25.19,
+            "volChange": 346.2,
+            "volume": "1,480,484",
+            "trend": "Long Buildup"
+        },
+        {
+            "symbol": "KOTAKBANK",
+            "ltp": 3525.17,
+            "pChange": -1.29,
+            "oiChange": 21.32,
+            "volChange": 330.1,
+            "volume": "4,454,551",
             "trend": "Short Buildup"
         },
         {
-            "symbol": "AXISBANK",
-            "ltp": 1752.79,
-            "pChange": 0.73,
-            "oiChange": -2.84,
-            "volChange": 295.1,
-            "volume": "8,567,067",
+            "symbol": "SBIN",
+            "ltp": 2879.38,
+            "pChange": 0.58,
+            "oiChange": -17.99,
+            "volChange": 269.5,
+            "volume": "2,695,824",
             "trend": "Short Covering"
         },
         {
             "symbol": "INFY",
-            "ltp": 2356.27,
-            "pChange": -1.53,
-            "oiChange": 2.48,
-            "volChange": 249.4,
-            "volume": "2,057,364",
+            "ltp": 2495.63,
+            "pChange": -1.19,
+            "oiChange": -0.11,
+            "volChange": 266.1,
+            "volume": "4,374,642",
+            "trend": "Long Unwinding"
+        },
+        {
+            "symbol": "TATASTEEL",
+            "ltp": 1713.06,
+            "pChange": -2.8,
+            "oiChange": -4.69,
+            "volChange": 265.2,
+            "volume": "2,567,810",
+            "trend": "Long Unwinding"
+        },
+        {
+            "symbol": "HDFCBANK",
+            "ltp": 1675.79,
+            "pChange": -0.33,
+            "oiChange": 2.26,
+            "volChange": 230.5,
+            "volume": "6,612,648",
             "trend": "Short Buildup"
-        },
-        {
-            "symbol": "TATAMOTORS",
-            "ltp": 963.72,
-            "pChange": -0.78,
-            "oiChange": -5.51,
-            "volChange": 236.3,
-            "volume": "1,377,609",
-            "trend": "Long Unwinding"
-        },
-        {
-            "symbol": "KOTAKBANK",
-            "ltp": 3196.78,
-            "pChange": 0.41,
-            "oiChange": -2.8,
-            "volChange": 231.1,
-            "volume": "1,052,913",
-            "trend": "Short Covering"
-        },
-        {
-            "symbol": "ICICIBANK",
-            "ltp": 1019.69,
-            "pChange": -1.7,
-            "oiChange": -15.39,
-            "volChange": 227.3,
-            "volume": "3,443,596",
-            "trend": "Long Unwinding"
         }
     ]
 }
