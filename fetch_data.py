@@ -126,7 +126,7 @@ def fetch_market_data():
     with open("data.json", "w") as f:
         json.dump(output, f, indent=4)
 
-    print(f"data.json updated cleanly at {current_time_str}")
+    print(f"data.json successfully generated at {current_time_str}")
 
 if __name__ == "__main__":
     fetch_market_data()
