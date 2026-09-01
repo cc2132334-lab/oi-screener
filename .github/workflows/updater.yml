@@ -2,9 +2,10 @@ name: Update Market Data
 
 on:
   schedule:
-    # Monday to Friday, market hours me har 15 minute par chalega
+    # Monday to Friday, market hours me har 15 minute + exact 9:25 AM IST (03:55 UTC)
     - cron: '*/15 3-10 * * 1-5'
-  workflow_dispatch: # Manual run button
+    - cron: '55 3 * * 1-5'
+  workflow_dispatch: # Manual button
 
 permissions:
   contents: write
@@ -34,4 +35,4 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add data.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto updated market data" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto updated market data & 9:25 snapshot" && git push)
