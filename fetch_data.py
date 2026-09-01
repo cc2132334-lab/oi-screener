@@ -58,7 +58,6 @@ def generate_executed_trades(symbols, is_fno=True, default_risk_per_trade=1000):
             current_ltp = round(entry_price - (risk_per_share * random.uniform(-0.5, 4.5)), 2)
             pnl_per_share = round(entry_price - current_ltp, 2)
 
-        # Quantity Calculation: Risk Per Trade / |Entry - SL|
         qty = max(1, int(default_risk_per_trade / risk_per_share))
         total_pnl = round(pnl_per_share * qty, 2)
         rr_achieved = round(pnl_per_share / risk_per_share, 1)
@@ -110,7 +109,6 @@ def generate_stock_data(symbols, is_fno=True):
         first_5m_close = round(ltp * random.uniform(0.997, 1.003), 2)
         vol_20ma = int(random.uniform(30000, 140000))
         vol_ratio = round(random.uniform(2.5, 9.8), 1)
-        first_5m_vol = int(vol_20ma * vol_ratio)
 
         is_pdh_break = (first_5m_close > pdh)
         is_pdl_break = (first_5m_close < pdl)
@@ -155,7 +153,6 @@ def fetch_market_data():
     fno_oi_losers = sorted(fno_stocks, key=lambda x: x["oiChange"], reverse=False)[:10]
     fno_vol_gainers = sorted(fno_stocks, key=lambda x: x["volChange"], reverse=True)[:10]
 
-    # 5M 5x Volume Breakouts: ALL matching stocks (no truncation), Sorted Descending by X Multiplier
     fno_breakouts = [s for s in fno_stocks if s.get("vol_ratio", 0) >= 5.0 and s["breakout_type"] != "Inside Range"]
     fno_breakouts = sorted(fno_breakouts, key=lambda x: x["vol_ratio"], reverse=True)
 
@@ -163,7 +160,6 @@ def fetch_market_data():
     cash_losers = sorted(cash_stocks, key=lambda x: x["pChange"], reverse=False)[:10]
     cash_vol_gainers = sorted(cash_stocks, key=lambda x: x["volChange"], reverse=True)[:10]
 
-    # Cash 5M 5x Breakouts: ALL matching stocks, Sorted Descending by X Multiplier
     cash_breakouts = [s for s in cash_stocks if s.get("vol_ratio", 0) >= 5.0 and s["breakout_type"] != "Inside Range"]
     cash_breakouts = sorted(cash_breakouts, key=lambda x: x["vol_ratio"], reverse=True)
 
@@ -212,7 +208,7 @@ def fetch_market_data():
     with open("data.json", "w") as f:
         json.dump(output, f, indent=4)
 
-    print(f"data.json successfully generated with all breakouts sorted descending at {current_time_str}")
+    print(f"data.json successfully generated at {current_time_str}")
 
 if __name__ == "__main__":
     fetch_market_data()
