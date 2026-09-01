@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Market Screener & Algo Bot</title>
+    <title>Live Market Screener & Algo Execution Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -29,7 +29,7 @@
                 <h1 class="text-xl sm:text-2xl font-black bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 dark:from-emerald-400 dark:to-cyan-400 bg-clip-text text-transparent flex items-center gap-2">
                     <i class="fa-solid fa-chart-line text-emerald-600 dark:text-emerald-400"></i> Market Screener
                 </h1>
-                <p id="subHeaderDesc" class="text-[11px] text-slate-500 dark:text-slate-400">Live Analytics & Background Algo Execution</p>
+                <p id="subHeaderDesc" class="text-[11px] text-slate-500 dark:text-slate-400">Live Analytics & Algo Trade Execution</p>
             </div>
             
             <div class="flex items-center gap-2">
@@ -59,7 +59,7 @@
             </button>
         </div>
 
-        <!-- 4 Primary Navigation Tabs (Bot Tab First) -->
+        <!-- 4 Navigation Tabs (Bot Tab First) -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 p-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl mb-4 shadow-sm">
             
             <!-- Tab 1: Bot (Default Active) -->
@@ -89,10 +89,11 @@
         </div>
 
         <!-- ================= TAB 1: ALGO ENGINE (DEFAULT ACTIVE FIRST TAB) ================= -->
-        <div id="strategy-bot" class="strategy-view active">
+        <div id="strategy-bot" class="strategy-view active space-y-4">
+            
+            <!-- 1. Bot Controller Card -->
             <div class="bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-4 shadow-md transition-all">
                 
-                <!-- Status & Start/Stop Controls -->
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
                     <div class="flex items-center gap-3">
                         <div id="botIconContainer" class="h-11 w-11 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl shadow-sm">
@@ -105,7 +106,7 @@
                                     <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span> RUNNING
                                 </span>
                             </div>
-                            <p id="botStatusText" class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Running in background: Verifying C1/C2 Rules, Move Cap & Ladder Trailing</p>
+                            <p id="botStatusText" class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Monitoring C1/C2 Breakouts, Max Trades Limit & Trailing Rules</p>
                         </div>
                     </div>
 
@@ -119,27 +120,46 @@
                     </div>
                 </div>
 
-                <!-- Parameters Selection (3 Core Dropdowns) -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
+                <!-- Parameters Controls (4 Dropdowns) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 mt-3.5">
                     
                     <!-- 1. Strategy Mode -->
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
-                            <i class="fa-solid fa-layer-group text-emerald-600 mr-1"></i> Strategy Mode:
+                        <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-1">
+                            <i class="fa-solid fa-layer-group text-emerald-600 mr-1"></i> Strategy:
                         </label>
-                        <select id="algoStrategySelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm">
-                            <option value="combined">🚀 Combine Mode (Strat 1 + 2)</option>
-                            <option value="strat1">⚡ Strat 1 (5M 5x Vol Breakout)</option>
-                            <option value="strat2">⏰ Strat 2 (9:25 Top 5 Shortlisted)</option>
+                        <select id="algoStrategySelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-2.5 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm">
+                            <option value="combined">🚀 Combine Mode (1 + 2)</option>
+                            <option value="strat1">⚡ Strat 1 (5M 5x Vol)</option>
+                            <option value="strat2">⏰ Strat 2 (9:25 Top 5)</option>
                         </select>
                     </div>
 
-                    <!-- 2. Max % Move Filter (1% to 10%) -->
+                    <!-- 2. Max Trades Limit Dropdown (1 to 10) -->
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
+                        <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-1">
+                            <i class="fa-solid fa-hand text-blue-500 mr-1"></i> Max Trades Limit:
+                        </label>
+                        <select id="algoTradeLimitSelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-2.5 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm">
+                            <option value="1">Max 1 Trade</option>
+                            <option value="2">Max 2 Trades</option>
+                            <option value="3" selected>Max 3 Trades</option>
+                            <option value="4">Max 4 Trades</option>
+                            <option value="5">Max 5 Trades</option>
+                            <option value="6">Max 6 Trades</option>
+                            <option value="7">Max 7 Trades</option>
+                            <option value="8">Max 8 Trades</option>
+                            <option value="9">Max 9 Trades</option>
+                            <option value="10">Max 10 Trades</option>
+                        </select>
+                    </div>
+
+                    <!-- 3. Max % Move Filter (1% to 10%) -->
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-1">
                             <i class="fa-solid fa-filter text-rose-500 mr-1"></i> Max C1 Move Cap:
                         </label>
-                        <select id="algoMaxMoveSelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-rose-500 shadow-sm">
+                        <select id="algoMaxMoveSelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-2.5 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-rose-500 shadow-sm">
                             <option value="1.0">Max 1.0% Move</option>
                             <option value="1.5">Max 1.5% Move</option>
                             <option value="2.0" selected>Max 2.0% Move</option>
@@ -150,46 +170,98 @@
                             <option value="6.0">Max 6.0% Move</option>
                             <option value="7.0">Max 7.0% Move</option>
                             <option value="8.0">Max 8.0% Move</option>
-                            <option value="9.0">Max 9.0% Move</option>
                             <option value="10.0">Max 10.0% Move</option>
                         </select>
                     </div>
 
-                    <!-- 3. Target Level with Built-in Half Book & Trailing Ladder -->
+                    <!-- 4. Target Level (1:1 to 1:10) -->
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
-                            <i class="fa-solid fa-bullseye text-indigo-600 mr-1"></i> Target Level & Trailing Ladder:
+                        <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-1">
+                            <i class="fa-solid fa-bullseye text-indigo-600 mr-1"></i> Target & Trailing:
                         </label>
-                        <select id="algoTargetSelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm">
-                            <option value="1">Target 1:1 (Quick Scalp)</option>
-                            <option value="2">Target 1:2 (50% Book @ 1:2 & SL to Cost)</option>
-                            <option value="3" selected>Target 1:3 (Half Book @ 1:2, 1:3 & SL to 1:1)</option>
-                            <option value="4">Target 1:4 (Half Book & Trail SL to 1:2)</option>
-                            <option value="5">Target 1:5 (Half Book & Trail SL to 1:3)</option>
-                            <option value="6">Target 1:6 (Half Book & Trail SL to 1:4)</option>
-                            <option value="7">Target 1:7 (Half Book & Trail SL to 1:5)</option>
-                            <option value="8">Target 1:8 (Half Book & Trail SL to 1:6)</option>
-                            <option value="9">Target 1:9 (Half Book & Trail SL to 1:7)</option>
-                            <option value="10">Target 1:10 (Max Trend: Half Book & Trail SL to 1:8)</option>
+                        <select id="algoTargetSelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-2.5 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm">
+                            <option value="1">Target 1:1 (Scalp)</option>
+                            <option value="2">Target 1:2 (50% @ 1:2)</option>
+                            <option value="3" selected>Target 1:3 (Half @ 1:2 & Trail)</option>
+                            <option value="4">Target 1:4 (Trail SL to 1:2)</option>
+                            <option value="5">Target 1:5 (Trail SL to 1:3)</option>
+                            <option value="6">Target 1:6 (Trail SL to 1:4)</option>
+                            <option value="7">Target 1:7 (Trail SL to 1:5)</option>
+                            <option value="8">Target 1:8 (Trail SL to 1:6)</option>
+                            <option value="10">Target 1:10 (Max Trend)</option>
                         </select>
                     </div>
 
                 </div>
 
-                <!-- Live Trailing SL Ladder Explanation Card -->
-                <div class="mt-4 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80">
-                    <div class="flex items-center gap-2 mb-2">
+                <!-- Info Strip -->
+                <div class="mt-3 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-[11px] text-slate-600 dark:text-slate-300 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
                         <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span class="font-bold text-xs text-slate-800 dark:text-slate-200">Active Execution & Trailing Strategy:</span>
+                        <span id="trailingRuleText"><b>Active Rule:</b> Max 3 Trades &bull; C1 Move &le; 2.0% &bull; Book 50% @ 1:2, Trail to Target 1:3.</span>
                     </div>
-                    <p id="trailingRuleText" class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                        <b>1. Entry:</b> C2 Breakout (C2 High/Low) or Pullback C1 Break.<br>
-                        <b>2. Move Filter:</b> Only stocks with C1 move &le; 2.0% are executed.<br>
-                        <b>3. Partial Booking & Trailing Ladder:</b> At 1:2 R:R, book 50% & move SL to Cost. At 1:3 R:R, book 50% of remainder & trail SL to 1:1 profit.
-                    </p>
+                    <span id="tradeLimitBadge" class="font-mono text-[10px] bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded border border-blue-300 font-bold">Limit: 3 Trades</span>
                 </div>
 
             </div>
+
+            <!-- 2. Live PnL & Performance Summary Cards -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                
+                <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl p-3 shadow-sm">
+                    <span class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold block">Total Net PnL</span>
+                    <span id="statTotalPnl" class="text-base sm:text-lg font-black font-mono text-emerald-600 dark:text-emerald-400">+₹0.00</span>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl p-3 shadow-sm">
+                    <span class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold block">Trades Executed</span>
+                    <span id="statTradeCount" class="text-base sm:text-lg font-black font-mono text-slate-800 dark:text-slate-100">0 / 3</span>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl p-3 shadow-sm">
+                    <span class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold block">Win Rate</span>
+                    <span id="statWinRate" class="text-base sm:text-lg font-black font-mono text-indigo-600 dark:text-indigo-400">0%</span>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl p-3 shadow-sm">
+                    <span class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold block">Realized Profit</span>
+                    <span id="statRealizedPnl" class="text-base sm:text-lg font-black font-mono text-emerald-600 dark:text-emerald-400">+₹0.00</span>
+                </div>
+
+            </div>
+
+            <!-- 3. Executed / Active Trades Table (Bot Trade Log) -->
+            <div class="bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-md">
+                <div class="flex items-center justify-between pb-2.5 mb-2 border-b border-slate-200 dark:border-slate-800 text-xs">
+                    <div class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                        <i class="fa-solid fa-list-check text-emerald-600 dark:text-emerald-400"></i> Today's Bot Executed Trades Log
+                    </div>
+                    <span id="tradeTableLimitStatus" class="text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 font-bold px-2 py-0.5 rounded border border-emerald-300">
+                        Trading Active
+                    </span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs whitespace-nowrap">
+                        <thead>
+                            <tr class="text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 text-[10px] uppercase">
+                                <th class="py-2.5 px-2">Time</th>
+                                <th class="py-2.5 px-2">Symbol</th>
+                                <th class="py-2.5 px-2">Signal</th>
+                                <th class="py-2.5 px-2">Entry</th>
+                                <th class="py-2.5 px-2">SL</th>
+                                <th class="py-2.5 px-2">LTP</th>
+                                <th class="py-2.5 px-2">Trade Status</th>
+                                <th class="py-2.5 px-2 text-right">PnL (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="executedTradesBody" class="divide-y divide-slate-100 dark:divide-slate-800/60">
+                            <tr><td colspan="8" class="text-center py-6 text-slate-400">Loading executed trades...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
 
         <!-- ================= TAB 2: LIVE PULSE ================= -->
@@ -426,12 +498,14 @@
             isBotRunning = true;
             localStorage.setItem('algo_bot_state', 'running');
             updateBotUI();
+            renderTables();
         }
 
         function stopBot() {
             isBotRunning = false;
             localStorage.setItem('algo_bot_state', 'stopped');
             updateBotUI();
+            renderTables();
         }
 
         function updateBotUI() {
@@ -444,14 +518,14 @@
             if (isBotRunning) {
                 badge.className = "text-[10px] font-bold px-2.5 py-0.5 rounded-full border bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border-emerald-300 flex items-center gap-1";
                 badge.innerHTML = `<span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span> RUNNING`;
-                desc.innerText = "Running in background: Verifying C1/C2 Rules, Move Cap & Ladder Trailing";
+                desc.innerText = "Monitoring C1/C2 Breakouts, Max Trades Limit & Trailing Rules";
                 iconBox.className = "h-11 w-11 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 text-emerald-600 flex items-center justify-center text-xl shadow-sm";
                 btnStart.className = "flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 text-white shadow-md flex items-center justify-center gap-1.5 opacity-100 cursor-default";
                 btnStop.className = "flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-rose-600 hover:text-white shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-95";
             } else {
                 badge.className = "text-[10px] font-bold px-2.5 py-0.5 rounded-full border bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-400 border-rose-300 flex items-center gap-1";
                 badge.innerHTML = `<span class="h-1.5 w-1.5 rounded-full bg-rose-500"></span> PAUSED`;
-                desc.innerText = "Algo Bot is stopped. Background triggers paused.";
+                desc.innerText = "Algo Bot is stopped. Execution paused.";
                 iconBox.className = "h-11 w-11 rounded-xl bg-rose-100 dark:bg-rose-950/80 border border-rose-300 text-rose-600 flex items-center justify-center text-xl shadow-sm";
                 btnStart.className = "flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-emerald-600 hover:text-white shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-95";
                 btnStop.className = "flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-rose-600 text-white shadow-md flex items-center justify-center gap-1.5 opacity-100 cursor-default";
@@ -462,22 +536,16 @@
         function onAlgoConfigChange() {
             const targetVal = parseInt(document.getElementById('algoTargetSelect').value);
             const maxMove = parseFloat(document.getElementById('algoMaxMoveSelect').value);
+            const maxTrades = parseInt(document.getElementById('algoTradeLimitSelect').value);
             const bannerText = document.getElementById('trailingRuleText');
+            const limitBadge = document.getElementById('tradeLimitBadge');
 
-            let ladderDesc = "";
-            if (targetVal === 1) {
-                ladderDesc = "100% quantity exit at 1:1 Target (No trailing).";
-            } else if (targetVal === 2) {
-                ladderDesc = "At 1:2 R:R, book 50% & move SL to Cost (Breakeven).";
-            } else if (targetVal === 3) {
-                ladderDesc = "At 1:2 R:R, book 50% & SL to Cost. At 1:3 R:R, book 50% of remainder & trail SL to 1:1 profit.";
-            } else {
-                ladderDesc = `At 1:2 R:R, book 50% & SL to Cost. Continue booking half and step-by-step trail SL up to 1:${targetVal - 2} until Target 1:${targetVal}.`;
-            }
+            limitBadge.innerText = `Limit: ${maxTrades} Trades`;
 
-            bannerText.innerHTML = `<b>1. Entry:</b> C2 Breakout (C2 High/Low) or Pullback C1 Break.<br>
-            <b>2. Move Filter:</b> Only stocks with C1 move &le; ${maxMove}% are executed.<br>
-            <b>3. Partial Booking & Trailing Ladder:</b> ${ladderDesc}`;
+            let trailingDesc = targetVal === 1 ? "100% exit at 1:1" : `Book 50% @ 1:2, Trail rest to 1:${targetVal}`;
+            bannerText.innerHTML = `<b>Active Rule:</b> Max ${maxTrades} Trades &bull; C1 Move &le; ${maxMove}% &bull; ${trailingDesc}.`;
+
+            renderTables();
         }
 
         function switchStrategy(stratId, element) {
@@ -585,10 +653,88 @@
             document.getElementById('lastUpdated').innerText = rawMarketData.last_updated;
             const data = rawMarketData[currentSegment] || {};
 
-            // 1. LIVE PULSE TAB
+            // 1. RENDER EXECUTED TRADES & PNL METRICS (In Tab 1)
+            const maxTradesLimit = parseInt(document.getElementById('algoTradeLimitSelect').value);
+            const maxMoveCap = parseFloat(document.getElementById('algoMaxMoveSelect').value);
+            const allTrades = data.executed_trades || [];
+
+            // Filter trades by move cap & slice to user's selected limit
+            const qualifiedTrades = allTrades.filter(t => (t.c1_move || 0) <= maxMoveCap);
+            const executedTrades = isBotRunning ? qualifiedTrades.slice(0, maxTradesLimit) : [];
+
+            // Calculate PnL Stats
+            let totalPnl = 0;
+            let realizedPnl = 0;
+            let winningTrades = 0;
+
+            executedTrades.forEach(t => {
+                totalPnl += t.pnl;
+                if (t.status.includes('Hit') || t.status.includes('Booked')) {
+                    realizedPnl += t.pnl;
+                }
+                if (t.pnl > 0) winningTrades++;
+            });
+
+            const winRate = executedTrades.length > 0 ? Math.round((winningTrades / executedTrades.length) * 100) : 0;
+
+            // Update PnL Stat Cards
+            const pnlEl = document.getElementById('statTotalPnl');
+            pnlEl.innerText = `${totalPnl >= 0 ? '+₹' : '-₹'}${Math.abs(totalPnl).toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
+            pnlEl.className = `text-base sm:text-lg font-black font-mono ${totalPnl >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`;
+
+            const realEl = document.getElementById('statRealizedPnl');
+            realEl.innerText = `${realizedPnl >= 0 ? '+₹' : '-₹'}${Math.abs(realizedPnl).toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
+            realEl.className = `text-base sm:text-lg font-black font-mono ${realizedPnl >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`;
+
+            document.getElementById('statTradeCount').innerText = `${executedTrades.length} / ${maxTradesLimit}`;
+            document.getElementById('statWinRate').innerText = `${winRate}%`;
+
+            const limitStatusBadge = document.getElementById('tradeTableLimitStatus');
+            if (!isBotRunning) {
+                limitStatusBadge.className = "text-[10px] bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-400 font-bold px-2 py-0.5 rounded border border-rose-300";
+                limitStatusBadge.innerText = "Bot Paused";
+            } else if (executedTrades.length >= maxTradesLimit) {
+                limitStatusBadge.className = "text-[10px] bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-400 font-bold px-2 py-0.5 rounded border border-amber-300";
+                limitStatusBadge.innerText = `Max Limit (${maxTradesLimit}) Reached`;
+            } else {
+                limitStatusBadge.className = "text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 font-bold px-2 py-0.5 rounded border border-emerald-300";
+                limitStatusBadge.innerText = "Active Scanning";
+            }
+
+            // Render Executed Trades Table Body
+            if (!isBotRunning) {
+                document.getElementById('executedTradesBody').innerHTML = `<tr><td colspan="8" class="text-center py-6 text-rose-500 font-semibold"><i class="fa-solid fa-pause mr-1"></i> Algo Execution Engine is stopped. Start bot to resume trade logging.</td></tr>`;
+            } else if (executedTrades.length === 0) {
+                document.getElementById('executedTradesBody').innerHTML = `<tr><td colspan="8" class="text-center py-6 text-slate-400 font-medium"><i class="fa-solid fa-filter mr-1"></i> No trades executed yet within Max ${maxMoveCap}% Move cap. Scanning market...</td></tr>`;
+            } else {
+                document.getElementById('executedTradesBody').innerHTML = executedTrades.map(t => {
+                    const isBuy = t.signal === "BUY";
+                    const isProfit = t.pnl >= 0;
+                    
+                    let statusBadge = "bg-slate-100 text-slate-700 border-slate-300";
+                    if (t.status.includes('Target 1:3 Hit')) statusBadge = "bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 border-purple-300";
+                    else if (t.status.includes('50% Booked')) statusBadge = "bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border-indigo-300";
+                    else if (t.status.includes('Stopped Out')) statusBadge = "bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-400 border-rose-300";
+                    else if (t.status.includes('Profit')) statusBadge = "bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border-emerald-300";
+
+                    return `
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                        <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${t.time}</td>
+                        <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${t.symbol}</td>
+                        <td class="py-2.5 px-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-bold border ${isBuy ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border-emerald-300' : 'bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-400 border-rose-300'}">${t.signal}</span></td>
+                        <td class="py-2.5 px-2 font-mono font-semibold text-slate-800 dark:text-slate-200">₹${t.entry}</td>
+                        <td class="py-2.5 px-2 font-mono text-rose-600 dark:text-rose-400">₹${t.sl}</td>
+                        <td class="py-2.5 px-2 font-mono font-bold text-slate-700 dark:text-slate-300">₹${t.current_ltp}</td>
+                        <td class="py-2.5 px-2"><span class="px-2 py-0.5 rounded text-[10px] font-bold border ${statusBadge}">${t.status}</span></td>
+                        <td class="py-2.5 px-2 text-right font-mono font-bold ${isProfit ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">${isProfit ? '+₹' : '-₹'}${Math.abs(t.pnl).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+                    </tr>`;
+                }).join('');
+            }
+
+            // 2. LIVE PULSE TAB
             if (currentSegment === 'fno') {
                 document.getElementById('gainerBody').innerHTML = (data.gainers || []).slice(0, 10).map((s, idx) => `
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
                         <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${idx + 1}</td>
                         <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${s.symbol}</td>
                         <td class="py-2.5 px-2 font-medium">₹${s.ltp}</td>
@@ -597,7 +743,7 @@
                         <td class="py-2.5 px-2 text-right">${getBadge(s.trend)}</td>
                     </tr>`).join('');
                 document.getElementById('loserBody').innerHTML = (data.losers || []).slice(0, 10).map((s, idx) => `
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
                         <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${idx + 1}</td>
                         <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${s.symbol}</td>
                         <td class="py-2.5 px-2 font-medium">₹${s.ltp}</td>
@@ -607,7 +753,7 @@
                     </tr>`).join('');
             } else {
                 document.getElementById('gainerBody').innerHTML = (data.gainers || []).slice(0, 10).map((s, idx) => `
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
                         <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${idx + 1}</td>
                         <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${s.symbol}</td>
                         <td class="py-2.5 px-2 font-medium">₹${s.ltp}</td>
@@ -616,7 +762,7 @@
                         <td class="py-2.5 px-2 text-right font-mono text-emerald-600 font-semibold">₹${s.dayHigh}</td>
                     </tr>`).join('');
                 document.getElementById('loserBody').innerHTML = (data.losers || []).slice(0, 10).map((s, idx) => `
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
                         <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${idx + 1}</td>
                         <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${s.symbol}</td>
                         <td class="py-2.5 px-2 font-medium">₹${s.ltp}</td>
@@ -627,7 +773,7 @@
             }
 
             document.getElementById('volumeBody').innerHTML = (data.volume_gainers || []).slice(0, 10).map((s, idx) => `
-                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
                     <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${idx + 1}</td>
                     <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${s.symbol}</td>
                     <td class="py-2.5 px-2 font-medium">₹${s.ltp}</td>
@@ -636,10 +782,10 @@
                     <td class="py-2.5 px-2 text-right text-slate-600 dark:text-slate-400 font-mono text-xs">${s.volume}</td>
                 </tr>`).join('');
 
-            // 2. 9:25 SNAPSHOT TAB
+            // 3. 9:25 SNAPSHOT TAB
             const snap = data.snapshot_925 || {};
             document.getElementById('snapGainerBody').innerHTML = (snap.gainers || []).map((s, idx) => `
-                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
                     <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${idx + 1}</td>
                     <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${s.symbol}</td>
                     <td class="py-2.5 px-2 font-mono text-slate-600 dark:text-slate-300">₹${s.snap_ltp}</td>
@@ -650,7 +796,7 @@
                 </tr>`).join('');
 
             document.getElementById('snapLoserBody').innerHTML = (snap.losers || []).map((s, idx) => `
-                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
                     <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${idx + 1}</td>
                     <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${s.symbol}</td>
                     <td class="py-2.5 px-2 font-mono text-slate-600 dark:text-slate-300">₹${s.snap_ltp}</td>
@@ -660,12 +806,12 @@
                     <td class="py-2.5 px-2 text-right">${getBadge(s.trend)}</td>
                 </tr>`).join('');
 
-            // 3. 5M 5x BREAKOUT TAB
+            // 4. 5M 5x BREAKOUT TAB
             const breakouts = data.breakouts_5m || [];
             document.getElementById('breakoutBody').innerHTML = breakouts.map((s, idx) => {
                 const isBullish = s.breakout_type.includes('Bullish');
                 return `
-                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
                     <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${idx + 1}</td>
                     <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${s.symbol}</td>
                     <td class="py-2.5 px-2 font-medium">₹${s.ltp}</td>
@@ -693,3 +839,4 @@
     </script>
 </body>
 </html>
+
