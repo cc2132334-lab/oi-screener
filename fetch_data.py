@@ -13,7 +13,6 @@ def get_nse_session():
     session = requests.Session()
     session.headers.update(HEADERS)
     try:
-        # Step 1: Base URL visit to establish session cookies
         session.get("https://www.nseindia.com", timeout=10)
     except Exception as e:
         print(f"Session init warning: {e}")
@@ -32,7 +31,7 @@ def calculate_trend(p_change, oi_change):
 def fetch_live_market_data():
     session = get_nse_session()
     
-    # Endpoint 1: NSE F&O OI Spurts (Live OI & Price Analysis)
+    # Endpoint 1: NSE F&O OI Spurts (Live OI Analysis)
     oi_url = "https://www.nseindia.com/api/live-analysis-oi-spurts-underlyings"
     # Endpoint 2: Most Active Securities by Volume
     vol_url = "https://www.nseindia.com/api/live-analysis-most-active-securities?index=volume"
@@ -51,11 +50,9 @@ def fetch_live_market_data():
             for item in data:
                 symbol = item.get("symbol", "")
                 ltp = float(item.get("underlyingValue", 0))
-                # Fix: NSE API sometimes provides price change or calculates it
                 prev_price = float(item.get("prevPrice", ltp))
                 p_change = round(((ltp - prev_price) / prev_price * 100), 2) if prev_price > 0 else 0.0
                 
-                # Check for explicit percentage keys if available
                 if "pChange" in item:
                     p_change = round(float(item.get("pChange", 0)), 2)
 
@@ -69,14 +66,14 @@ def fetch_live_market_data():
                     "ltp": ltp,
                     "pChange": p_change,
                     "oiChange": oi_change,
-                    "volChange": oi_change, # Reference spike metric
+                    "volChange": oi_change,
                     "volume": f"{volume:,}",
                     "trend": trend
                 })
 
-            # Sort Gainers & Losers
-            oi_gainers = sorted(processed_stocks, key=lambda x: x["oiChange"], reverse=True)[:8]
-            oi_losers = sorted(processed_stocks, key=lambda x: x["oiChange"])[:8]
+            # Top 10 OI Gainers & Losers
+            oi_gainers = sorted(processed_stocks, key=lambda x: x["oiChange"], reverse=True)[:10]
+            oi_losers = sorted(processed_stocks, key=lambda x: x["oiChange"])[:10]
     except Exception as e:
         print(f"Error fetching OI data: {e}")
 
@@ -85,12 +82,12 @@ def fetch_live_market_data():
         res_vol = session.get(vol_url, timeout=12)
         if res_vol.status_code == 200:
             vol_data = res_vol.json().get("data", [])
-            for item in vol_data[:8]:
+            # Top 10 Most Active by Volume
+            for item in vol_data[:10]:
                 symbol = item.get("symbol", "")
                 ltp = float(item.get("ltp", 0))
                 p_change = round(float(item.get("pChange", 0)), 2)
                 volume = int(item.get("totalTradedVolume", 0))
-                # Volume comparison percentage (if available or calculated)
                 vol_change = round(float(item.get("pChange", 0)), 1)
 
                 vol_gainers.append({
@@ -104,7 +101,7 @@ def fetch_live_market_data():
     except Exception as e:
         print(f"Error fetching Volume data: {e}")
 
-    # Calculate Current IST Time (+5:30)
+    # Current IST Time (+5:30)
     ist_time = datetime.now(timezone.utc) + timedelta(hours=5, minutes=30)
     formatted_time = ist_time.strftime("%I:%M:%S %p IST")
 
@@ -118,7 +115,7 @@ def fetch_live_market_data():
     with open("data.json", "w") as f:
         json.dump(output, f, indent=4)
 
-    print(f"data.json successfully updated at {formatted_time}")
+    print(f"data.json updated with Top 10 stocks at {formatted_time}")
 
 if __name__ == "__main__":
     fetch_live_market_data()
