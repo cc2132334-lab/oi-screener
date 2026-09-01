@@ -29,6 +29,73 @@ def calculate_trend(p_change, oi_change):
     else:
         return "Long Unwinding"
 
+def generate_executed_trades(symbols, is_fno=True):
+    trade_list = []
+    times = ["09:20 AM", "09:25 AM", "09:35 AM", "09:50 AM", "10:15 AM", "10:45 AM", "11:30 AM", "12:15 PM", "01:05 PM", "01:45 PM"]
+
+    for idx, sym in enumerate(symbols[:10]):
+        ltp = round(random.uniform(350, 3800), 2)
+        p_chg = round(random.uniform(-3.5, 4.2), 2)
+        is_buy = p_chg >= 0
+        signal_type = "BUY" if is_buy else "SELL"
+
+        # C1/C2 Levels
+        c1_high = round(ltp * (1.006 if is_buy else 1.002), 2)
+        c1_low = round(ltp * (0.994 if is_buy else 0.988), 2)
+        
+        is_direct = (idx % 2 == 0)
+        if is_buy:
+            entry_price = round(c1_high * 1.004, 2) if is_direct else c1_high
+            sl_price = round(c1_low * 0.998, 2)
+            scenario = "C2 Breakout" if is_direct else "C1 Pullback Break"
+            risk = max(round(entry_price - sl_price, 2), 1.5)
+            # Simulated current movement
+            current_ltp = round(entry_price + (risk * random.uniform(-0.5, 3.8)), 2)
+            pnl_per_share = round(current_ltp - entry_price, 2)
+        else:
+            entry_price = round(c1_low * 0.996, 2) if is_direct else c1_low
+            sl_price = round(c1_high * 1.002, 2)
+            scenario = "C2 Breakdown" if is_direct else "C1 Pullback Break"
+            risk = max(round(sl_price - entry_price, 2), 1.5)
+            current_ltp = round(entry_price - (risk * random.uniform(-0.5, 3.8)), 2)
+            pnl_per_share = round(entry_price - current_ltp, 2)
+
+        qty = int(random.choice([100, 150, 200, 250, 500])) if is_fno else int(random.choice([50, 100, 200, 300]))
+        total_pnl = round(pnl_per_share * qty, 2)
+
+        # Status Logic
+        rr_achieved = round(pnl_per_share / risk, 1)
+        if rr_achieved >= 3.0:
+            status = "Target 1:3 Hit (Partial Booked, Trailing)"
+        elif rr_achieved >= 2.0:
+            status = "50% Booked @ 1:2 (SL @ Cost)"
+        elif rr_achieved >= 1.0:
+            status = "Running in Profit (Target 1:1 Hit)"
+        elif rr_achieved <= -1.0:
+            status = "Stopped Out (SL Hit)"
+            total_pnl = -round(risk * qty, 2)
+        else:
+            status = "Active Position"
+
+        trade_list.append({
+            "trade_id": f"TRD-{idx+101}",
+            "time": times[idx],
+            "symbol": sym,
+            "signal": signal_type,
+            "scenario": scenario,
+            "qty": qty,
+            "entry": entry_price,
+            "sl": sl_price,
+            "risk": risk,
+            "current_ltp": current_ltp,
+            "pnl": total_pnl,
+            "rr_achieved": rr_achieved,
+            "status": status,
+            "c1_move": abs(p_chg)
+        })
+
+    return trade_list
+
 def generate_stock_data(symbols, is_fno=True):
     stock_list = []
     for sym in symbols:
@@ -86,6 +153,10 @@ def fetch_market_data():
     cash_vol_gainers = sorted(cash_stocks, key=lambda x: x["volChange"], reverse=True)[:10]
     cash_breakouts = sorted([s for s in cash_stocks if s["breakout_type"] != "Inside Range"], key=lambda x: x["volChange"], reverse=True)[:8]
 
+    # Generate Executed Trade Logs for Algo Engine Tab
+    fno_trades = generate_executed_trades(fno_symbols, is_fno=True)
+    cash_trades = generate_executed_trades(cash_symbols, is_fno=False)
+
     ist_now = datetime.now(timezone(timedelta(hours=5, minutes=30)))
     today_str = ist_now.strftime("%Y-%m-%d")
     current_time_str = ist_now.strftime("%I:%M:%S %p IST")
@@ -112,21 +183,23 @@ def fetch_market_data():
             "losers": fno_oi_losers,
             "volume_gainers": fno_vol_gainers,
             "snapshot_925": snap_fno,
-            "breakouts_5m": fno_breakouts
+            "breakouts_5m": fno_breakouts,
+            "executed_trades": fno_trades
         },
         "cash": {
             "gainers": cash_gainers,
             "losers": cash_losers,
             "volume_gainers": cash_vol_gainers,
             "snapshot_925": snap_cash,
-            "breakouts_5m": cash_breakouts
+            "breakouts_5m": cash_breakouts,
+            "executed_trades": cash_trades
         }
     }
 
     with open("data.json", "w") as f:
         json.dump(output, f, indent=4)
 
-    print(f"data.json successfully generated at {current_time_str}")
+    print(f"data.json successfully generated with Trade Logs at {current_time_str}")
 
 if __name__ == "__main__":
     fetch_market_data()
