@@ -120,7 +120,7 @@
                 <h1 class="text-xl sm:text-2xl font-black bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 dark:from-emerald-400 dark:to-cyan-400 bg-clip-text text-transparent flex items-center gap-2">
                     <i class="fa-solid fa-chart-line text-emerald-600 dark:text-emerald-400"></i> Market Screener
                 </h1>
-                <p id="subHeaderDesc" class="text-[11px] text-slate-500 dark:text-slate-400">Live Analytics & Google Sheet Protected Engine</p>
+                <p id="subHeaderDesc" class="text-[11px] text-slate-500 dark:text-slate-400">Live Analytics & Dual-Mode Algo Terminal</p>
             </div>
             
             <div class="flex items-center gap-2">
@@ -164,7 +164,7 @@
             </button>
         </div>
 
-        <!-- 4 Navigation Tabs (Bot Tab First) -->
+        <!-- 4 Navigation Tabs -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 p-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl mb-4 shadow-sm">
             <button onclick="switchStrategy('strategy-bot', this)" id="strat-bot-btn" class="strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 shadow-sm transition-all">
                 <i class="fa-solid fa-robot"></i> <span>Algo Engine</span>
@@ -187,17 +187,17 @@
                 
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
                     <div class="flex items-center gap-3">
-                        <div id="botIconContainer" class="h-11 w-11 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl shadow-sm">
+                        <div id="botIconContainer" class="h-11 w-11 rounded-xl bg-amber-100 dark:bg-amber-950/80 border border-amber-300 dark:border-amber-800 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl shadow-sm">
                             <i id="botIcon" class="fa-solid fa-robot"></i>
                         </div>
                         <div>
                             <div class="flex items-center gap-2">
                                 <span class="font-extrabold text-sm sm:text-base text-slate-800 dark:text-slate-100">Automated Bot Controller</span>
-                                <span id="botStatusBadge" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full border bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800 flex items-center gap-1">
-                                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span> RUNNING
+                                <span id="botStatusBadge" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full border bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-400 border-amber-300 flex items-center gap-1">
+                                    <span class="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse"></span> PAPER TRADING
                                 </span>
                             </div>
-                            <p id="botStatusText" class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Continuous half-booking trail until selected target full exit</p>
+                            <p id="botStatusText" class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Live Broker Data Feed &bull; Simulated Virtual Orders (0 Risk)</p>
                         </div>
                     </div>
 
@@ -211,8 +211,20 @@
                     </div>
                 </div>
 
-                <!-- Parameters Controls (Manual Inputs) -->
+                <!-- Parameters Controls (Including Execution Mode) -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 mt-3.5">
+                    
+                    <!-- NEW: Execution Mode Selector -->
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-1">
+                            <i class="fa-solid fa-toggle-on text-amber-500 mr-1"></i> Bot Trading Mode:
+                        </label>
+                        <select id="algoExecutionMode" onchange="onExecutionModeChange()" class="w-full text-xs font-bold bg-amber-50 dark:bg-slate-800 border border-amber-300 dark:border-amber-600 rounded-xl px-2.5 py-2 text-amber-900 dark:text-amber-300 focus:ring-2 focus:ring-amber-500 shadow-sm">
+                            <option value="paper" selected>🧪 Live Paper Trade (Virtual / Zero Risk)</option>
+                            <option value="real">⚡ Live Real Trade (Real Demat Orders)</option>
+                        </select>
+                    </div>
+
                     <div>
                         <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-1">
                             <i class="fa-solid fa-layer-group text-emerald-600 mr-1"></i> Strategy:
@@ -268,14 +280,15 @@
                         </label>
                         <input type="number" id="algoRiskPerTradeInput" step="100" min="100" value="1000" onchange="saveConfigToSheet()" class="w-full text-xs font-bold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-amber-500 shadow-sm">
                     </div>
+
                 </div>
 
                 <!-- Info Strip -->
                 <div class="mt-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80">
                     <div class="flex items-center justify-between mb-1.5">
                         <div class="flex items-center gap-2">
-                            <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <span class="font-bold text-xs text-slate-800 dark:text-slate-200">Google Sheet Cloud Sync:</span>
+                            <span id="modeStatusDot" class="h-2 w-2 rounded-full bg-amber-500 animate-pulse"></span>
+                            <span id="modeStatusHeading" class="font-bold text-xs text-amber-700 dark:text-amber-400">Paper Trading Active:</span>
                         </div>
                         <span id="cloudSyncBadge" class="font-mono text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded border border-emerald-300 font-bold">Sheet Connected</span>
                     </div>
@@ -289,7 +302,7 @@
             <!-- Live PnL & Summary Cards -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                 <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl p-3 shadow-sm">
-                    <span class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold block">Total Net PnL</span>
+                    <span id="pnlLabelText" class="text-[10px] uppercase tracking-wider text-amber-600 dark:text-amber-400 font-bold block">Paper Net PnL</span>
                     <span id="statTotalPnl" class="text-base sm:text-lg font-black font-mono text-emerald-600 dark:text-emerald-400">+₹0.00</span>
                 </div>
                 <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl p-3 shadow-sm">
@@ -310,10 +323,10 @@
             <div class="bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-md">
                 <div class="flex items-center justify-between pb-2.5 mb-2 border-b border-slate-200 dark:border-slate-800 text-xs">
                     <div class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                        <i class="fa-solid fa-list-check text-emerald-600 dark:text-emerald-400"></i> Today's Bot Executed Trades Log (Sized: Risk / |Entry - SL|)
+                        <i class="fa-solid fa-list-check text-emerald-600 dark:text-emerald-400"></i> Today's Bot Executed Trades Log
                     </div>
-                    <span id="tradeTableLimitStatus" class="text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 font-bold px-2 py-0.5 rounded border border-emerald-300">
-                        Trading Active
+                    <span id="tradeTableLimitStatus" class="text-[10px] bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-400 font-bold px-2 py-0.5 rounded border border-amber-300">
+                        Paper Active
                     </span>
                 </div>
 
@@ -322,6 +335,7 @@
                         <thead>
                             <tr class="text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 text-[10px] uppercase">
                                 <th class="py-2.5 px-2">Time</th>
+                                <th class="py-2.5 px-2">Mode</th>
                                 <th class="py-2.5 px-2">Symbol</th>
                                 <th class="py-2.5 px-2">Signal</th>
                                 <th class="py-2.5 px-2">Qty</th>
@@ -333,7 +347,7 @@
                             </tr>
                         </thead>
                         <tbody id="executedTradesBody" class="divide-y divide-slate-100 dark:divide-slate-800/60">
-                            <tr><td colspan="9" class="text-center py-6 text-slate-400">Loading executed trades...</td></tr>
+                            <tr><td colspan="10" class="text-center py-6 text-slate-400">Loading executed trades...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -500,7 +514,7 @@
             </section>
         </div>
 
-        <!-- ================= TAB 4: 5M 5x VOLUME BREAKOUT (ALL STOCKS DESCENDING) ================= -->
+        <!-- ================= TAB 4: 5M 5x VOLUME BREAKOUT ================= -->
         <div id="strategy-breakout" class="strategy-view">
             <section class="bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-md">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-slate-800 gap-2">
@@ -536,9 +550,8 @@
 
     </div>
 
-    <!-- ================= JAVASCRIPT & GOOGLE SHEET BACKEND ================= -->
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
     <script>
-        // Integrated Google Sheet Web App Deployment URL
         const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbwxPCcmStKmiPpqQ4bnF3vW-aECsc6R2C9R757F_50zvC0v4h4DHLS-QRNjaXkbVTmg/exec";
 
         let currentUser = null;
@@ -547,9 +560,10 @@
         let isKillSwitchTriggered = false;
         let currentSegment = 'fno';
         let currentStrategy = 'strategy-bot';
+        let executionMode = 'paper'; // Default to Paper Trading for Safety
         let rawMarketData = null;
 
-        // 1. AUTH MODAL LOGIC
+        // 1. AUTH MODAL
         function toggleAuthMode() {
             isSignUpMode = !isSignUpMode;
             document.getElementById('authTitle').innerText = isSignUpMode ? "Create New Account" : "User Login";
@@ -679,7 +693,7 @@
             location.reload();
         }
 
-        // 2. BROKER MODAL HELPERS
+        // 2. BROKER MODAL
         function openBrokerModal() {
             document.getElementById('brokerModal').classList.remove('hidden');
             document.getElementById('brokerModal').classList.add('flex');
@@ -711,7 +725,52 @@
             }
         }
 
-        // 3. THEME
+        // 3. EXECUTION MODE HANDLER (Paper vs Real)
+        function onExecutionModeChange() {
+            executionMode = document.getElementById('algoExecutionMode').value;
+            const badge = document.getElementById('botStatusBadge');
+            const iconBox = document.getElementById('botIconContainer');
+            const desc = document.getElementById('botStatusText');
+            const pnlLabel = document.getElementById('pnlLabelText');
+            const modeDot = document.getElementById('modeStatusDot');
+            const modeHeading = document.getElementById('modeStatusHeading');
+            const tableStatus = document.getElementById('tradeTableLimitStatus');
+
+            if (executionMode === 'paper') {
+                badge.className = "text-[10px] font-bold px-2.5 py-0.5 rounded-full border bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-400 border-amber-300 flex items-center gap-1";
+                badge.innerHTML = `<span class="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse"></span> PAPER TRADING`;
+                iconBox.className = "h-11 w-11 rounded-xl bg-amber-100 dark:bg-amber-950/80 border border-amber-300 text-amber-600 flex items-center justify-center text-xl shadow-sm";
+                desc.innerText = "Live Broker Data Feed • Simulated Virtual Orders (0 Risk)";
+                pnlLabel.innerText = "Paper Net PnL";
+                pnlLabel.className = "text-[10px] uppercase tracking-wider text-amber-600 dark:text-amber-400 font-bold block";
+                modeDot.className = "h-2 w-2 rounded-full bg-amber-500 animate-pulse";
+                modeHeading.className = "font-bold text-xs text-amber-700 dark:text-amber-400";
+                modeHeading.innerText = "Paper Trading Active:";
+                tableStatus.innerText = "Paper Active";
+                tableStatus.className = "text-[10px] bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-400 font-bold px-2 py-0.5 rounded border border-amber-300";
+            } else {
+                const confirmed = confirm("⚠️ Switch to REAL LIVE TRADING?\n\nReal money orders will be sent to your connected broker Demat account. Proceed?");
+                if (!confirmed) {
+                    document.getElementById('algoExecutionMode').value = 'paper';
+                    onExecutionModeChange();
+                    return;
+                }
+                badge.className = "text-[10px] font-bold px-2.5 py-0.5 rounded-full border bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border-emerald-300 flex items-center gap-1";
+                badge.innerHTML = `<span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span> REAL LIVE TRADING`;
+                iconBox.className = "h-11 w-11 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 text-emerald-600 flex items-center justify-center text-xl shadow-sm";
+                desc.innerText = "Connected to Demat Broker • Real Orders Firing On Breakouts";
+                pnlLabel.innerText = "Real Net PnL";
+                pnlLabel.className = "text-[10px] uppercase tracking-wider text-emerald-600 dark:text-emerald-400 font-bold block";
+                modeDot.className = "h-2 w-2 rounded-full bg-emerald-500 animate-pulse";
+                modeHeading.className = "font-bold text-xs text-emerald-700 dark:text-emerald-400";
+                modeHeading.innerText = "Real Trading Active:";
+                tableStatus.innerText = "Real Orders Active";
+                tableStatus.className = "text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 font-bold px-2 py-0.5 rounded border border-emerald-300";
+            }
+            renderTables();
+        }
+
+        // 4. THEME
         function initTheme() {
             const saved = localStorage.getItem('theme') || 'light';
             if (saved === 'dark') {
@@ -730,7 +789,7 @@
         }
         initTheme();
 
-        // 4. BOT STATE CONTROLS
+        // 5. BOT CONTROLLER STATE
         function startBot() {
             isKillSwitchTriggered = false;
             isBotRunning = true;
@@ -759,10 +818,7 @@
                 btnStart.className = "flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-emerald-600 hover:text-white shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-95";
                 btnStop.className = "flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-rose-600 text-white shadow-md flex items-center justify-center gap-1.5 opacity-100 cursor-default";
             } else if (isBotRunning) {
-                badge.className = "text-[10px] font-bold px-2.5 py-0.5 rounded-full border bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border-emerald-300 flex items-center gap-1";
-                badge.innerHTML = `<span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span> RUNNING`;
-                desc.innerText = "Google Sheet Synced &bull; Continuous Trailing Active";
-                iconBox.className = "h-11 w-11 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 text-emerald-600 flex items-center justify-center text-xl shadow-sm";
+                onExecutionModeChange();
                 btnStart.className = "flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 text-white shadow-md flex items-center justify-center gap-1.5 opacity-100 cursor-default";
                 btnStop.className = "flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-rose-600 hover:text-white shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-95";
             } else {
@@ -794,7 +850,7 @@
             renderTables();
         }
 
-        // 5. NAVIGATION & TAB SWITCHERS
+        // 6. NAVIGATION & TABS
         function switchStrategy(stratId, element) {
             currentStrategy = stratId;
             document.querySelectorAll('.strategy-view').forEach(el => el.classList.remove('active'));
@@ -813,7 +869,7 @@
             if (seg === 'fno') {
                 fnoBtn.className = "flex-1 py-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all bg-white dark:bg-slate-800 text-emerald-700 dark:text-emerald-400 shadow-sm";
                 cashBtn.className = "flex-1 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-all text-slate-600 dark:text-slate-400";
-                document.getElementById('subHeaderDesc').innerText = "F&O Segment: Live OI Pulse, 9:25 Snapshot & Sheet Algo";
+                document.getElementById('subHeaderDesc').innerText = "F&O Segment: Live OI Pulse, 9:25 Snapshot & Dual-Mode Engine";
 
                 document.getElementById('label-subtab-1').innerText = "OI Gainers (10)";
                 document.getElementById('label-subtab-2').innerText = "OI Losers (10)";
@@ -837,7 +893,7 @@
             } else {
                 cashBtn.className = "flex-1 py-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all bg-white dark:bg-slate-800 text-cyan-700 dark:text-cyan-400 shadow-sm";
                 fnoBtn.className = "flex-1 py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-all text-slate-600 dark:text-slate-400";
-                document.getElementById('subHeaderDesc').innerText = "Cash (Equity) Segment: Live Price Pulse, 9:25 Snapshot & Sheet Algo";
+                document.getElementById('subHeaderDesc').innerText = "Cash (Equity) Segment: Live Price Pulse, 9:25 Snapshot & Dual-Mode Engine";
 
                 document.getElementById('label-subtab-1').innerText = "Price Gainers (10)";
                 document.getElementById('label-subtab-2').innerText = "Price Losers (10)";
@@ -892,7 +948,7 @@
             return `<span class="px-2 py-0.5 rounded text-[11px] font-bold border ${styles[trend] || 'bg-slate-200 text-slate-800'}">${trend}</span>`;
         }
 
-        // 6. RENDER TABLES
+        // 7. RENDER TABLES
         function renderTables() {
             if (!rawMarketData) return;
 
@@ -914,7 +970,6 @@
             let winningTrades = 0;
 
             executedTrades.forEach(t => {
-                // Dynamically re-calculate Quantity based on user's manual Risk Per Trade input
                 const recalculatedQty = Math.max(1, Math.floor(riskPerTrade / t.risk));
                 const pnlPerShare = t.pnl / t.qty;
                 t.qty = recalculatedQty;
@@ -945,25 +1000,10 @@
             document.getElementById('statTradeCount').innerText = `${executedTrades.length} / ${maxTradesLimit}`;
             document.getElementById('statWinRate').innerText = `${winRate}%`;
 
-            const limitStatusBadge = document.getElementById('tradeTableLimitStatus');
-            if (isKillSwitchTriggered) {
-                limitStatusBadge.className = "text-[10px] bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-400 font-bold px-2 py-0.5 rounded border border-rose-300";
-                limitStatusBadge.innerText = "Kill Switch Active";
-            } else if (!isBotRunning) {
-                limitStatusBadge.className = "text-[10px] bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-400 font-bold px-2 py-0.5 rounded border border-rose-300";
-                limitStatusBadge.innerText = "Bot Paused";
-            } else if (executedTrades.length >= maxTradesLimit) {
-                limitStatusBadge.className = "text-[10px] bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-400 font-bold px-2 py-0.5 rounded border border-amber-300";
-                limitStatusBadge.innerText = `Max Limit (${maxTradesLimit}) Reached`;
-            } else {
-                limitStatusBadge.className = "text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 font-bold px-2 py-0.5 rounded border border-emerald-300";
-                limitStatusBadge.innerText = "Active Scanning";
-            }
-
             if (!isBotRunning || isKillSwitchTriggered) {
-                document.getElementById('executedTradesBody').innerHTML = `<tr><td colspan="9" class="text-center py-6 text-rose-500 font-semibold"><i class="fa-solid fa-pause mr-1"></i> Algo Execution is currently paused.</td></tr>`;
+                document.getElementById('executedTradesBody').innerHTML = `<tr><td colspan="10" class="text-center py-6 text-rose-500 font-semibold"><i class="fa-solid fa-pause mr-1"></i> Algo Execution is currently paused.</td></tr>`;
             } else if (executedTrades.length === 0) {
-                document.getElementById('executedTradesBody').innerHTML = `<tr><td colspan="9" class="text-center py-6 text-slate-400 font-medium"><i class="fa-solid fa-filter mr-1"></i> No trades executed yet within Max ${maxMoveCap}% Move cap. Scanning market...</td></tr>`;
+                document.getElementById('executedTradesBody').innerHTML = `<tr><td colspan="10" class="text-center py-6 text-slate-400 font-medium"><i class="fa-solid fa-filter mr-1"></i> No trades executed yet within Max ${maxMoveCap}% Move cap. Scanning market...</td></tr>`;
             } else {
                 document.getElementById('executedTradesBody').innerHTML = executedTrades.map(t => {
                     const isBuy = t.signal === "BUY";
@@ -984,9 +1024,14 @@
                         statusBadge = "bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border-emerald-300";
                     }
 
+                    const modeTag = executionMode === 'paper' 
+                        ? `<span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-400 border border-amber-300">PAPER</span>`
+                        : `<span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 border border-emerald-300">REAL</span>`;
+
                     return `
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
                         <td class="py-2.5 px-2 text-slate-400 font-mono text-xs">${t.time}</td>
+                        <td class="py-2.5 px-2">${modeTag}</td>
                         <td class="py-2.5 px-2 font-bold text-slate-800 dark:text-slate-100">${t.symbol}</td>
                         <td class="py-2.5 px-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-bold border ${isBuy ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border-emerald-300' : 'bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-400 border-rose-300'}">${t.signal}</span></td>
                         <td class="py-2.5 px-2 font-mono font-bold text-slate-700 dark:text-slate-300">${t.qty}</td>
@@ -999,7 +1044,7 @@
                 }).join('');
             }
 
-            // Screener Tables (Pulse & Snapshot)
+            // Pulse & Snapshot Tables
             if (currentSegment === 'fno') {
                 document.getElementById('gainerBody').innerHTML = (data.gainers || []).slice(0, 10).map((s, idx) => `
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
@@ -1073,7 +1118,7 @@
                     <td class="py-2.5 px-2 text-right">${getBadge(s.trend)}</td>
                 </tr>`).join('');
 
-            // 4. TAB 4: 5M 5x BREAKOUT TAB (ALL STOCKS SORTED DESCENDING BY X MULTIPLIER)
+            // TAB 4: 5M 5x BREAKOUT (ALL STOCKS SORTED DESCENDING BY X MULTIPLIER)
             const rawBreakouts = data.breakouts_5m || [];
             const breakouts = rawBreakouts.sort((a, b) => (b.vol_ratio || 0) - (a.vol_ratio || 0));
 
@@ -1109,7 +1154,6 @@
             }
         }
 
-        // Check active session on load
         window.addEventListener('DOMContentLoaded', () => {
             const saved = localStorage.getItem('active_algo_user');
             if (saved) {
