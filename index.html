@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Market Screener & Algo Execution Engine</title>
+    <title>Live Market Screener & Multi-Broker Algo Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -21,7 +21,81 @@
 </head>
 <body class="bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen p-3 sm:p-5 font-sans transition-colors duration-200">
 
-    <div class="max-w-4xl mx-auto">
+    <!-- ================= 1. SECURITY LOGIN / PIN MODAL ================= -->
+    <div id="loginModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center">
+            <div class="h-14 w-14 rounded-2xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl mx-auto mb-4 shadow-sm">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h2 class="text-xl font-black text-slate-800 dark:text-slate-100">Algo Terminal Lock</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Enter your private 4-digit PIN to access live dashboard</p>
+            
+            <div class="mt-5">
+                <input type="password" id="userPinInput" maxlength="6" placeholder="Enter PIN (Default: 1234)" class="w-full text-center tracking-widest text-lg font-bold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm mb-3">
+                <p id="pinErrorMsg" class="text-xs text-rose-500 font-semibold hidden mb-2">Incorrect PIN! Try again.</p>
+                <button onclick="verifyPin()" class="w-full py-2.5 rounded-xl text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md transition-all active:scale-95">
+                    Unlock Dashboard
+                </button>
+            </div>
+            <p class="text-[10px] text-slate-400 mt-4">Protected Session &bull; Credentials Stored Locally</p>
+        </div>
+    </div>
+
+    <!-- ================= 2. BROKER API SETUP MODAL ================= -->
+    <div id="brokerModal" class="fixed inset-0 z-40 bg-slate-950/80 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-3xl p-5 max-w-md w-full shadow-2xl">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-200 dark:border-slate-800">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-building-columns text-emerald-600 dark:text-emerald-400"></i>
+                    <h3 class="font-bold text-sm sm:text-base text-slate-800 dark:text-slate-100">Broker API Configuration</h3>
+                </div>
+                <button onclick="closeBrokerModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3 mt-4 text-xs">
+                <!-- Broker Selection Dropdown -->
+                <div>
+                    <label class="block font-bold text-slate-600 dark:text-slate-300 mb-1">Select Demat Broker:</label>
+                    <select id="brokerSelect" onchange="onBrokerSelectChange()" class="w-full font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500">
+                        <option value="dhan">Dhan (DhanHQ API)</option>
+                        <option value="fyers">Fyers (Fyers API v3)</option>
+                        <option value="angel">Angel One (SmartAPI)</option>
+                        <option value="upstox">Upstox (Upstox Pro API)</option>
+                    </select>
+                </div>
+
+                <!-- Dynamic Broker Fields -->
+                <div>
+                    <label id="lblClientId" class="block font-bold text-slate-600 dark:text-slate-300 mb-1">Client ID / User ID:</label>
+                    <input type="text" id="brokerClientId" placeholder="e.g., 100029384" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500">
+                </div>
+
+                <div>
+                    <label id="lblApiKey" class="block font-bold text-slate-600 dark:text-slate-300 mb-1">API Key / App ID:</label>
+                    <input type="text" id="brokerApiKey" placeholder="Enter API Key / App ID" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500">
+                </div>
+
+                <div>
+                    <label id="lblAccessToken" class="block font-bold text-slate-600 dark:text-slate-300 mb-1">Access Token / Secret:</label>
+                    <input type="password" id="brokerAccessToken" placeholder="Enter Token" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500">
+                </div>
+
+                <div class="pt-2 flex gap-2">
+                    <button onclick="saveBrokerDetails()" class="flex-1 py-2.5 rounded-xl font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow transition-all">
+                        Save Broker Settings
+                    </button>
+                    <button onclick="closeBrokerModal()" class="px-4 py-2.5 rounded-xl font-semibold bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MAIN DASHBOARD APP ================= -->
+    <div id="mainDashboardApp" class="max-w-4xl mx-auto opacity-0 pointer-events-none transition-opacity duration-300">
         
         <!-- Header -->
         <header class="flex justify-between items-center pb-3 mb-3 border-b border-slate-300 dark:border-slate-800">
@@ -29,13 +103,22 @@
                 <h1 class="text-xl sm:text-2xl font-black bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 dark:from-emerald-400 dark:to-cyan-400 bg-clip-text text-transparent flex items-center gap-2">
                     <i class="fa-solid fa-chart-line text-emerald-600 dark:text-emerald-400"></i> Market Screener
                 </h1>
-                <p id="subHeaderDesc" class="text-[11px] text-slate-500 dark:text-slate-400">Live Analytics & Risk-Protected Algo Execution</p>
+                <p id="subHeaderDesc" class="text-[11px] text-slate-500 dark:text-slate-400">Multi-Broker Live Algo & Screener</p>
             </div>
             
             <div class="flex items-center gap-2">
+                <!-- Broker Setup Button -->
+                <button onclick="openBrokerModal()" title="Configure Broker API" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 shadow-sm flex items-center gap-1.5 text-xs font-bold px-2.5">
+                    <i class="fa-solid fa-plug text-emerald-500"></i>
+                    <span id="activeBrokerName" class="hidden sm:inline">Dhan API</span>
+                </button>
+
+                <!-- Theme Switch -->
                 <button onclick="toggleTheme()" id="themeBtn" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-slate-700 dark:text-amber-400 shadow-sm">
                     <i id="themeIcon" class="fa-solid fa-moon text-sm"></i>
                 </button>
+
+                <!-- Update Badge -->
                 <div class="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 px-3 py-1.5 rounded-xl shadow-sm">
                     <span class="relative flex h-2.5 w-2.5">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
@@ -59,35 +142,25 @@
             </button>
         </div>
 
-        <!-- 4 Primary Navigation Tabs -->
+        <!-- 4 Navigation Tabs -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 p-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl mb-4 shadow-sm">
-            
             <button onclick="switchStrategy('strategy-bot', this)" id="strat-bot-btn" class="strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 shadow-sm transition-all">
-                <i class="fa-solid fa-robot"></i>
-                <span>Algo Engine</span>
+                <i class="fa-solid fa-robot"></i> <span>Algo Engine</span>
             </button>
-
             <button onclick="switchStrategy('strategy-live', this)" id="strat-live-btn" class="strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 border border-transparent transition-all">
-                <i class="fa-solid fa-chart-pie"></i>
-                <span id="label-strat-1">Live Pulse</span>
+                <i class="fa-solid fa-chart-pie"></i> <span id="label-strat-1">Live Pulse</span>
             </button>
-
             <button onclick="switchStrategy('strategy-925', this)" id="strat-925-btn" class="strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 border border-transparent transition-all">
-                <i class="fa-solid fa-clock text-blue-500"></i>
-                <span>9:25 Snapshot</span>
+                <i class="fa-solid fa-clock text-blue-500"></i> <span>9:25 Snapshot</span>
             </button>
-
             <button onclick="switchStrategy('strategy-breakout', this)" id="strat-breakout-btn" class="strat-btn py-2.5 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 border border-transparent transition-all">
-                <i class="fa-solid fa-bolt text-amber-500"></i>
-                <span>5M 5x Volume</span>
+                <i class="fa-solid fa-bolt text-amber-500"></i> <span>5M 5x Volume</span>
             </button>
-
         </div>
 
-        <!-- ================= TAB 1: ALGO ENGINE ================= -->
+        <!-- ================= TAB 1: ALGO ENGINE (MANUAL RISK & PNL) ================= -->
         <div id="strategy-bot" class="strategy-view active space-y-4">
             
-            <!-- 1. Bot Controller Card -->
             <div class="bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-4 shadow-md transition-all">
                 
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
@@ -116,15 +189,15 @@
                     </div>
                 </div>
 
-                <!-- Parameters Controls (5 Dropdowns Grid) -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 mt-3.5">
+                <!-- Manual Input Controls Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-3.5">
                     
                     <!-- 1. Strategy Mode -->
                     <div>
                         <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-1">
-                            <i class="fa-solid fa-layer-group text-emerald-600 mr-1"></i> Strategy:
+                            <i class="fa-solid fa-layer-group text-emerald-600 mr-1"></i> Strategy Mode:
                         </label>
-                        <select id="algoStrategySelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-2.5 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm">
+                        <select id="algoStrategySelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-2.5 py-2 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 shadow-sm">
                             <option value="combined">🚀 Combine Mode (1 + 2)</option>
                             <option value="strat1">⚡ Strat 1 (5M 5x Vol)</option>
                             <option value="strat2">⏰ Strat 2 (9:25 Top 5)</option>
@@ -136,81 +209,49 @@
                         <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-1">
                             <i class="fa-solid fa-bullseye text-indigo-600 mr-1"></i> Target Level (Full Exit @ Target):
                         </label>
-                        <select id="algoTargetSelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-2.5 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm">
-                            <option value="1">Target 1:1 (100% Full Exit)</option>
-                            <option value="2">Target 1:2 (100% Full Exit)</option>
-                            <option value="3">Target 1:3 (Half @ 1:2 & Full Exit @ 1:3)</option>
-                            <option value="4" selected>Target 1:4 (Trail & Full Exit @ 1:4)</option>
-                            <option value="5">Target 1:5 (Trail & Full Exit @ 1:5)</option>
-                            <option value="6">Target 1:6 (Trail & Full Exit @ 1:6)</option>
-                            <option value="7">Target 1:7 (Trail & Full Exit @ 1:7)</option>
-                            <option value="8">Target 1:8 (Trail & Full Exit @ 1:8)</option>
-                            <option value="9">Target 1:9 (Trail & Full Exit @ 1:9)</option>
-                            <option value="10">Target 1:10 (Trail & Full Exit @ 1:10)</option>
+                        <select id="algoTargetSelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-2.5 py-2 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 shadow-sm">
+                            <option value="1">Target 1:1</option>
+                            <option value="2">Target 1:2</option>
+                            <option value="3">Target 1:3</option>
+                            <option value="4" selected>Target 1:4 (Trail & Full Exit)</option>
+                            <option value="5">Target 1:5</option>
+                            <option value="6">Target 1:6</option>
+                            <option value="7">Target 1:7</option>
+                            <option value="8">Target 1:8</option>
+                            <option value="10">Target 1:10</option>
                         </select>
                     </div>
 
-                    <!-- 3. Max % Move Filter -->
+                    <!-- 3. Manual Input: Max Move Cap (%) -->
                     <div>
                         <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-1">
-                            <i class="fa-solid fa-filter text-amber-500 mr-1"></i> Max C1 Move Cap:
+                            <i class="fa-solid fa-filter text-amber-500 mr-1"></i> Max C1 Move Cap (%):
                         </label>
-                        <select id="algoMaxMoveSelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-2.5 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-sm">
-                            <option value="1.0">Max 1.0% Move</option>
-                            <option value="1.5">Max 1.5% Move</option>
-                            <option value="2.0" selected>Max 2.0% Move</option>
-                            <option value="2.5">Max 2.5% Move</option>
-                            <option value="3.0">Max 3.0% Move</option>
-                            <option value="4.0">Max 4.0% Move</option>
-                            <option value="5.0">Max 5.0% Move</option>
-                            <option value="10.0">Max 10.0% Move</option>
-                        </select>
+                        <input type="number" id="algoMaxMoveInput" step="0.1" min="0.5" max="10" value="2.0" oninput="onAlgoConfigChange()" class="w-full text-xs font-bold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-amber-500 shadow-sm">
                     </div>
 
-                    <!-- 4. Max Trades Limit -->
+                    <!-- 4. Manual Input: Max Daily Trades Limit -->
                     <div>
                         <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-1">
-                            <i class="fa-solid fa-hand text-blue-500 mr-1"></i> Max Trades Limit:
+                            <i class="fa-solid fa-hand text-blue-500 mr-1"></i> Max Trades Per Day:
                         </label>
-                        <select id="algoTradeLimitSelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-2.5 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm">
-                            <option value="1">Max 1 Trade</option>
-                            <option value="2">Max 2 Trades</option>
-                            <option value="3" selected>Max 3 Trades</option>
-                            <option value="4">Max 4 Trades</option>
-                            <option value="5">Max 5 Trades</option>
-                            <option value="6">Max 6 Trades</option>
-                            <option value="8">Max 8 Trades</option>
-                            <option value="10">Max 10 Trades</option>
-                        </select>
+                        <input type="number" id="algoTradeLimitInput" min="1" max="20" value="3" oninput="onAlgoConfigChange()" class="w-full text-xs font-bold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 shadow-sm">
                     </div>
 
-                    <!-- 5. Max Daily Loss Limit (Kill Switch) -->
+                    <!-- 5. Manual Input: Max Daily Loss (₹) -->
                     <div>
                         <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-1">
-                            <i class="fa-solid fa-shield-halved text-rose-500 mr-1"></i> Max Daily Loss (Kill Switch):
+                            <i class="fa-solid fa-shield-halved text-rose-500 mr-1"></i> Max Daily Loss Limit (₹):
                         </label>
-                        <select id="algoDailyLossSelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-2.5 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-rose-500 shadow-sm">
-                            <option value="1000">₹1,000 Max Loss</option>
-                            <option value="2000" selected>₹2,000 Max Loss</option>
-                            <option value="3000">₹3,000 Max Loss</option>
-                            <option value="5000">₹5,000 Max Loss</option>
-                            <option value="10000">₹10,000 Max Loss</option>
-                            <option value="20000">₹20,000 Max Loss</option>
-                        </select>
+                        <input type="number" id="algoDailyLossInput" step="500" min="500" value="2000" oninput="onAlgoConfigChange()" class="w-full text-xs font-bold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-rose-600 dark:text-rose-400 focus:ring-2 focus:ring-rose-500 shadow-sm">
                     </div>
 
-                    <!-- 6. Max Risk Per Trade -->
+                    <!-- 6. Manual Input: Max Risk Per Trade (₹) -->
                     <div>
                         <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-1">
-                            <i class="fa-solid fa-coins text-amber-600 mr-1"></i> Max Risk Per Trade:
+                            <i class="fa-solid fa-coins text-amber-600 mr-1"></i> Max Risk Per Trade (₹):
                         </label>
-                        <select id="algoRiskPerTradeSelect" onchange="onAlgoConfigChange()" class="w-full text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-2.5 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-sm">
-                            <option value="500">₹500 per trade</option>
-                            <option value="1000" selected>₹1,000 per trade</option>
-                            <option value="1500">₹1,500 per trade</option>
-                            <option value="2000">₹2,000 per trade</option>
-                            <option value="3000">₹3,000 per trade</option>
-                        </select>
+                        <input type="number" id="algoRiskPerTradeInput" step="100" min="100" value="1000" oninput="onAlgoConfigChange()" class="w-full text-xs font-bold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-amber-500 shadow-sm">
                     </div>
 
                 </div>
@@ -231,32 +272,27 @@
 
             </div>
 
-            <!-- 2. Live PnL & Performance Summary Cards -->
+            <!-- Live PnL & Summary Cards -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                
                 <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl p-3 shadow-sm">
                     <span class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold block">Total Net PnL</span>
                     <span id="statTotalPnl" class="text-base sm:text-lg font-black font-mono text-emerald-600 dark:text-emerald-400">+₹0.00</span>
                 </div>
-
                 <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl p-3 shadow-sm">
                     <span class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold block">Trades Executed</span>
                     <span id="statTradeCount" class="text-base sm:text-lg font-black font-mono text-slate-800 dark:text-slate-100">0 / 3</span>
                 </div>
-
                 <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl p-3 shadow-sm">
                     <span class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold block">Win Rate</span>
                     <span id="statWinRate" class="text-base sm:text-lg font-black font-mono text-indigo-600 dark:text-indigo-400">0%</span>
                 </div>
-
                 <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl p-3 shadow-sm">
                     <span class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold block">Risk Buffer Left</span>
                     <span id="statRiskBuffer" class="text-base sm:text-lg font-black font-mono text-slate-800 dark:text-slate-100">₹2,000</span>
                 </div>
-
             </div>
 
-            <!-- 3. Executed / Active Trades Table (Bot Trade Log) -->
+            <!-- Executed Trades Log Table -->
             <div class="bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-md">
                 <div class="flex items-center justify-between pb-2.5 mb-2 border-b border-slate-200 dark:border-slate-800 text-xs">
                     <div class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
@@ -294,16 +330,13 @@
         <div id="strategy-live" class="strategy-view">
             <div class="grid grid-cols-3 gap-1.5 p-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl mb-4 shadow-sm">
                 <button onclick="selectSubTab('tab-gainer', this, 'emerald')" id="subtab-1" class="sub-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 shadow-sm">
-                    <i class="fa-solid fa-arrow-trend-up"></i>
-                    <span id="label-subtab-1">OI Gainers (10)</span>
+                    <i class="fa-solid fa-arrow-trend-up"></i> <span id="label-subtab-1">OI Gainers (10)</span>
                 </button>
                 <button onclick="selectSubTab('tab-loser', this, 'rose')" id="subtab-2" class="sub-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 border border-transparent">
-                    <i class="fa-solid fa-arrow-trend-down"></i>
-                    <span id="label-subtab-2">OI Losers (10)</span>
+                    <i class="fa-solid fa-arrow-trend-down"></i> <span id="label-subtab-2">OI Losers (10)</span>
                 </button>
                 <button onclick="selectSubTab('tab-volume', this, 'cyan')" id="subtab-3" class="sub-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 border border-transparent">
-                    <i class="fa-solid fa-bolt"></i>
-                    <span id="label-subtab-3">Volume (10)</span>
+                    <i class="fa-solid fa-bolt"></i> <span id="label-subtab-3">Volume (10)</span>
                 </button>
             </div>
 
@@ -375,7 +408,7 @@
                                 <th class="py-2.5 px-2">LTP</th>
                                 <th id="th-vol-metric" class="py-2.5 px-2">Vol Spike &darr;</th>
                                 <th class="py-2.5 px-2">Price %</th>
-                                <th id="th-vol-extra" class="py-2.5 px-2 text-right">Total Volume</th>
+                                <th class="py-2.5 px-2 text-right">Total Volume</th>
                             </tr>
                         </thead>
                         <tbody id="volumeBody" class="divide-y divide-slate-100 dark:divide-slate-800/60">
@@ -390,12 +423,10 @@
         <div id="strategy-925" class="strategy-view">
             <div class="grid grid-cols-2 gap-2 p-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl mb-4 shadow-sm">
                 <button onclick="selectSnapSubTab('snap-gainer-view', this, 'emerald')" id="snap-sub-1" class="snap-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-300 shadow-sm">
-                    <i class="fa-solid fa-arrow-trend-up"></i>
-                    <span id="label-snap-1">9:25 AM OI Gainers</span>
+                    <i class="fa-solid fa-arrow-trend-up"></i> <span id="label-snap-1">9:25 AM OI Gainers</span>
                 </button>
                 <button onclick="selectSnapSubTab('snap-loser-view', this, 'rose')" id="snap-sub-2" class="snap-btn py-2 px-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-400 border border-transparent">
-                    <i class="fa-solid fa-arrow-trend-down"></i>
-                    <span id="label-snap-2">9:25 AM OI Losers</span>
+                    <i class="fa-solid fa-arrow-trend-down"></i> <span id="label-snap-2">9:25 AM OI Losers</span>
                 </button>
             </div>
 
@@ -497,6 +528,90 @@
         let isKillSwitchTriggered = false;
         let rawMarketData = null;
 
+        // --- 1. PIN LOGIN & SECURITY ---
+        function verifyPin() {
+            const input = document.getElementById('userPinInput').value;
+            const savedPin = localStorage.getItem('algo_terminal_pin') || '1234';
+            const errorMsg = document.getElementById('pinErrorMsg');
+
+            if (input === savedPin) {
+                document.getElementById('loginModal').classList.add('hidden');
+                const app = document.getElementById('mainDashboardApp');
+                app.classList.remove('opacity-0', 'pointer-events-none');
+                sessionStorage.setItem('is_terminal_unlocked', 'true');
+            } else {
+                errorMsg.classList.remove('hidden');
+            }
+        }
+
+        function checkSession() {
+            if (sessionStorage.getItem('is_terminal_unlocked') === 'true') {
+                document.getElementById('loginModal').classList.add('hidden');
+                const app = document.getElementById('mainDashboardApp');
+                app.classList.remove('opacity-0', 'pointer-events-none');
+            }
+        }
+        checkSession();
+
+        // --- 2. BROKER CONFIGURATION MODAL ---
+        function openBrokerModal() {
+            document.getElementById('brokerModal').classList.remove('hidden');
+            document.getElementById('brokerModal').classList.add('flex');
+            loadSavedBrokerDetails();
+        }
+
+        function closeBrokerModal() {
+            document.getElementById('brokerModal').classList.add('hidden');
+            document.getElementById('brokerModal').classList.remove('flex');
+        }
+
+        function onBrokerSelectChange() {
+            const b = document.getElementById('brokerSelect').value;
+            if (b === 'dhan') {
+                document.getElementById('lblClientId').innerText = "Dhan Client ID:";
+                document.getElementById('lblApiKey').innerText = "Dhan API Key:";
+                document.getElementById('lblAccessToken').innerText = "Access Token (JWT):";
+            } else if (b === 'fyers') {
+                document.getElementById('lblClientId').innerText = "Fyers User ID:";
+                document.getElementById('lblApiKey').innerText = "App ID (Client ID):";
+                document.getElementById('lblAccessToken').innerText = "Access Token:";
+            } else if (b === 'angel') {
+                document.getElementById('lblClientId').innerText = "Angel Client Code:";
+                document.getElementById('lblApiKey').innerText = "SmartAPI Key:";
+                document.getElementById('lblAccessToken').innerText = "JWT / TOTP Token:";
+            } else {
+                document.getElementById('lblClientId').innerText = "Upstox User ID:";
+                document.getElementById('lblApiKey').innerText = "API Key:";
+                document.getElementById('lblAccessToken').innerText = "Access Token:";
+            }
+        }
+
+        function saveBrokerDetails() {
+            const broker = document.getElementById('brokerSelect').value;
+            const cid = document.getElementById('brokerClientId').value;
+            const key = document.getElementById('brokerApiKey').value;
+            const token = document.getElementById('brokerAccessToken').value;
+
+            localStorage.setItem('broker_name', broker);
+            localStorage.setItem('broker_cid', cid);
+            localStorage.setItem('broker_key', key);
+            localStorage.setItem('broker_token', token);
+
+            document.getElementById('activeBrokerName').innerText = broker.toUpperCase() + " API";
+            closeBrokerModal();
+            alert("Broker settings saved securely in your browser!");
+        }
+
+        function loadSavedBrokerDetails() {
+            const b = localStorage.getItem('broker_name') || 'dhan';
+            document.getElementById('brokerSelect').value = b;
+            document.getElementById('brokerClientId').value = localStorage.getItem('broker_cid') || '';
+            document.getElementById('brokerApiKey').value = localStorage.getItem('broker_key') || '';
+            document.getElementById('brokerAccessToken').value = localStorage.getItem('broker_token') || '';
+            onBrokerSelectChange();
+        }
+
+        // --- 3. THEME LOGIC ---
         function initTheme() {
             const saved = localStorage.getItem('theme') || 'light';
             if (saved === 'dark') {
@@ -515,6 +630,7 @@
         }
         initTheme();
 
+        // --- 4. BOT STATE CONTROLS ---
         function initBotState() {
             const savedState = localStorage.getItem('algo_bot_state');
             isBotRunning = (savedState !== 'stopped');
@@ -568,14 +684,15 @@
         }
         initBotState();
 
+        // --- 5. ALGO CONFIGURATION CHANGE ---
         function onAlgoConfigChange() {
             const targetVal = parseInt(document.getElementById('algoTargetSelect').value);
             const bannerText = document.getElementById('trailingRuleText');
 
             if (targetVal === 1) {
-                bannerText.innerHTML = `<b>Target 1:1:</b> 100% full exit immediately at Target 1:1 (Quick Scalp).`;
+                bannerText.innerHTML = `<b>Target 1:1:</b> 100% full exit immediately at Target 1:1.`;
             } else if (targetVal === 2) {
-                bannerText.innerHTML = `<b>Target 1:2:</b> 100% full exit at 1:2 (Or 50% @ 1:1, full @ 1:2).`;
+                bannerText.innerHTML = `<b>Target 1:2:</b> 100% full exit at 1:2.`;
             } else {
                 let steps = [`<b>1:2 Hit:</b> Book 50% (SL &rarr; Cost)`];
                 for (let i = 3; i < targetVal; i++) {
@@ -588,6 +705,7 @@
             renderTables();
         }
 
+        // --- 6. NAVIGATION & TABS ---
         function switchStrategy(stratId, element) {
             currentStrategy = stratId;
             document.querySelectorAll('.strategy-view').forEach(el => el.classList.remove('active'));
@@ -624,7 +742,6 @@
                 document.getElementById('label-snap-2').innerText = "9:25 AM OI Losers";
                 document.getElementById('snapGainerHeading').innerHTML = `<i class="fa-solid fa-lock"></i> Frozen Snapshot @ 09:25 AM (Top F&O OI Gainers)`;
                 document.getElementById('snapLoserHeading').innerHTML = `<i class="fa-solid fa-lock"></i> Frozen Snapshot @ 09:25 AM (Top F&O OI Losers)`;
-
                 document.getElementById('breakoutTitle').innerHTML = `<i class="fa-solid fa-bolt"></i> 1st 5-Min Opening Breakout (F&O Stocks)`;
                 document.getElementById('breakoutBadge').innerText = "F&O Setups";
 
@@ -649,7 +766,6 @@
                 document.getElementById('label-snap-2').innerText = "9:25 AM Price Losers";
                 document.getElementById('snapGainerHeading').innerHTML = `<i class="fa-solid fa-lock"></i> Frozen Snapshot @ 09:25 AM (Top Cash Price Gainers)`;
                 document.getElementById('snapLoserHeading').innerHTML = `<i class="fa-solid fa-lock"></i> Frozen Snapshot @ 09:25 AM (Top Cash Price Losers)`;
-
                 document.getElementById('breakoutTitle').innerHTML = `<i class="fa-solid fa-bolt"></i> 1st 5-Min Opening Breakout (Cash Momentum Stocks)`;
                 document.getElementById('breakoutBadge').innerText = "Cash Setups";
             }
@@ -687,15 +803,16 @@
             return `<span class="px-2 py-0.5 rounded text-[11px] font-bold border ${styles[trend] || 'bg-slate-200 text-slate-800'}">${trend}</span>`;
         }
 
+        // --- 7. RENDER TABLES & PNL ---
         function renderTables() {
             if (!rawMarketData) return;
 
             document.getElementById('lastUpdated').innerText = rawMarketData.last_updated;
             const data = rawMarketData[currentSegment] || {};
 
-            const maxTradesLimit = parseInt(document.getElementById('algoTradeLimitSelect').value);
-            const maxMoveCap = parseFloat(document.getElementById('algoMaxMoveSelect').value);
-            const maxDailyLoss = parseFloat(document.getElementById('algoDailyLossSelect').value);
+            const maxTradesLimit = parseInt(document.getElementById('algoTradeLimitInput').value) || 3;
+            const maxMoveCap = parseFloat(document.getElementById('algoMaxMoveInput').value) || 2.0;
+            const maxDailyLoss = parseFloat(document.getElementById('algoDailyLossInput').value) || 2000;
             const targetVal = parseInt(document.getElementById('algoTargetSelect').value);
             const allTrades = data.executed_trades || [];
 
@@ -714,7 +831,6 @@
                 if (t.pnl > 0) winningTrades++;
             });
 
-            // Circuit Breaker / Kill Switch Check
             if (totalPnl <= -maxDailyLoss && isBotRunning) {
                 isKillSwitchTriggered = true;
                 updateBotUI();
@@ -729,7 +845,6 @@
 
             const riskBufferEl = document.getElementById('statRiskBuffer');
             riskBufferEl.innerText = `₹${remainingRiskBuffer.toLocaleString('en-IN', {minimumFractionDigits: 0})}`;
-            riskBufferEl.className = `text-base sm:text-lg font-black font-mono ${remainingRiskBuffer < maxDailyLoss * 0.3 ? 'text-rose-600 dark:text-rose-400' : 'text-slate-800 dark:text-slate-100'}`;
 
             document.getElementById('statTradeCount').innerText = `${executedTrades.length} / ${maxTradesLimit}`;
             document.getElementById('statWinRate').innerText = `${winRate}%`;
@@ -787,7 +902,7 @@
                 }).join('');
             }
 
-            // 2. LIVE PULSE TAB
+            // Screener Tables Rendering
             if (currentSegment === 'fno') {
                 document.getElementById('gainerBody').innerHTML = (data.gainers || []).slice(0, 10).map((s, idx) => `
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
@@ -838,7 +953,7 @@
                     <td class="py-2.5 px-2 text-right text-slate-600 dark:text-slate-400 font-mono text-xs">${s.volume}</td>
                 </tr>`).join('');
 
-            // 3. 9:25 SNAPSHOT TAB
+            // Snapshot tab
             const snap = data.snapshot_925 || {};
             document.getElementById('snapGainerBody').innerHTML = (snap.gainers || []).map((s, idx) => `
                 <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
@@ -862,7 +977,7 @@
                     <td class="py-2.5 px-2 text-right">${getBadge(s.trend)}</td>
                 </tr>`).join('');
 
-            // 4. 5M 5x BREAKOUT TAB
+            // Breakout tab
             const breakouts = data.breakouts_5m || [];
             document.getElementById('breakoutBody').innerHTML = breakouts.map((s, idx) => {
                 const isBullish = s.breakout_type.includes('Bullish');
